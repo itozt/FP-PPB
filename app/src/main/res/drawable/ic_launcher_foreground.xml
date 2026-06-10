@@ -2,6 +2,6 @@
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
     android:inset="24dp">
     <bitmap
-        android:src="@mipmap/movlix_icon"
+        android:src="@mipmap/ic_launcher_foreground"
         android:gravity="center" />
 </inset>
