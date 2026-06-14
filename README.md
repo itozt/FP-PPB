@@ -1,209 +1,70 @@
-# MovFlix — Movie Catalogue App
+<p align="center">
+  <img name="download-badge" src="app/src/main/res/drawable/movflix_logo.png" alt="MovFlix Logo" width="250" style="background-color: black; padding: 40px 25%; border-radius: 12px;">
+</p>
 
-A Netflix-inspired Android app built with **Jetpack Compose**, **MVVM + Repository Pattern**, **Room (offline-first)**, and **TMDb API**.
+<h1 align="center">MovFlix</h1>
 
----
+<p align="center">
+  <a href="https://github.com/itozt/FP-PPB/releases/latest"><img src="https://img.shields.io/github/v/tag/itozt/FP-PPB?color=brightgreen&label=version&style=for-the-badge" alt="Latest Version"></a>
+  &nbsp;
+  <a href="https://github.com/itozt/FP-PPB/releases/latest/download/movflix_v1.0.0.apk"><img src="https://img.shields.io/badge/download_apk-blue?style=for-the-badge&logo=android" alt="Download APK"></a>
+</p>
 
-## Tech Stack
+> Aplikasi katalog film modern untuk menjelajah, mencari, dan menonton trailer film terbaru, dibangun sepenuhnya menggunakan teknologi Jetpack Compose dengan data real-time dari TMDB.
 
-| Layer | Library |
-|---|---|
-| UI | Jetpack Compose + Material 3 |
-| Architecture | MVVM + Repository Pattern |
-| Remote | Retrofit 2.11 + OkHttp 4.12 + Gson |
-| Local | Room 2.6.1 |
-| Images | Coil 2.7.0 |
-| Video | AndroidYouTubePlayer 12.1.1 |
-| Navigation | Navigation Compose 2.8.3 |
-| DI | Manual Service Locator |
-| Language | Kotlin 2.0.21 |
+## 📖 Tentang
+**MovFlix** adalah aplikasi *movie catalogue* yang menampilkan daftar film populer, detail film, serta pemutaran *trailer* langsung di dalam aplikasi. Seluruh data film diambil secara *real-time* dari **TMDB (The Movie Database) API**. Aplikasi ini menghadirkan navigasi yang responsif berbasis gestur *swipe*, dilengkapi sistem **autentikasi lokal** (login, register, dan guest) serta **watchlist** yang tersimpan terpisah untuk setiap akun secara *offline* di perangkat. Dikembangkan sebagai pemenuhan evaluasi Final Project mata kuliah Pemrograman Perangkat Bergerak.
 
----
+## ✨ Fitur Utama
+- **Autentikasi Lokal:** Register dan login dengan email & password, atau **Masuk sebagai Guest** tanpa akun. Password diamankan dengan *hashing* **SHA-256 + salt** dan disimpan secara lokal melalui Room.
+- **Navigasi Cepat Berbasis Swipe:** Transisi mulus antara layar **Home**, **Search**, dan **Profile** menggunakan HorizontalPager yang tersinkron dengan *bottom navigation*.
+- **Beranda Dinamis:** *Hero slider* film *trending* yang bergeser otomatis dan tak terbatas (*infinite loop*), diikuti baris kategori **Now Playing**, **Popular**, dan **Top Rated**.
+- **Pencarian Cerdas:** Pencarian film secara *debounced* (tanpa tombol submit) lengkap dengan filter **genre**.
+- **Detail & Trailer:** Halaman detail film menampilkan sinopsis, rating, durasi, dan genre, serta pemutaran **trailer YouTube** *full-screen* langsung di dalam aplikasi.
+- **Watchlist Per-Akun:** Simpan film favorit ke watchlist yang terikat pada akun masing-masing. Akun *guest* diarahkan untuk login terlebih dahulu sebelum menyimpan.
+- **Estetika Material Design 3:** Tema gelap sinematik, *collapsing top bar* saat *scroll*, *shimmer skeleton* saat memuat, dan *Splash Screen* berlogo.
 
-## Features
+## 📱 Screenshot Terkini
+| Home | Detail & Trailer | Profile |
+| :---: | :---: | :---: |
+| <img src="assets/img-home.jpg" width="230"> | <img src="assets/img-detail.jpg" width="230"> | <img src="assets/img-profile.jpg" width="230"> |
 
-- **Home** — Auto-scrolling hero slider (trending) + Now Playing, Popular, Top Rated rows
-- **Search** — Debounced live search (500ms) + scrollable genre filter chips
-- **Detail** — Backdrop, poster, rating, runtime, genres, synopsis, YouTube trailer dialog
-- **Watchlist** — Offline-first Room grid with delete + Undo snackbar
-- **Shimmer** — Wave skeleton placeholders on all loading states
-- **Dark/Light Mode** — Full Material 3 theming
+> Tambahkan gambar screenshot ke folder `assets/` sesuai nama di atas.
 
----
+## 📥 Download APK
+Anda dapat melihat seluruh versi aplikasi yang pernah dirilis melalui halaman **GitHub Releases**, sekaligus mengunduh versi terbaru dengan mudah.
 
-## Setup in Android Studio
+🔗 **[Lihat Semua Versi Rilis](https://github.com/itozt/FP-PPB/releases)**
 
-### Prerequisites
-- **Android Studio Hedgehog (2023.1.1)** or newer (Meerkat recommended)
-- **JDK 11** or higher
-- Internet connection (for Gradle sync & TMDb API)
+Untuk mengunduh **APK stabil terbaru**, silakan klik tombol di bawah ini:
 
----
+⬇️ **[Download APK Terbaru](#download-badge)**
 
-### Step 1 — Create a New Project in Android Studio
+## ⚙️ Petunjuk Instalasi
+1. Unduh berkas APK dari tautan di atas.
+2. Buka paket installer yang terunduh pada perangkat Android Anda.
+3. Apabila muncul peringatan keamanan, izinkan pemasangan dari **Sumber Tidak Dikenal (Unknown Sources)** pada pengaturan keamanan ponsel.
+4. Ikuti instruksi di layar hingga selesai, dan aplikasi siap digunakan.
 
-1. Open Android Studio
-2. Click **File → New → New Project**
-3. Choose **Empty Activity** (the Compose template)
-4. Set these values exactly:
-   - **Name:** `MovieCatalogue`
-   - **Package name:** `com.example.moviecatalogue`
-   - **Save location:** your chosen directory
-   - **Language:** Kotlin
-   - **Minimum SDK:** API 24
-5. Click **Finish** and wait for the initial Gradle sync
+> **Catatan:** Aplikasi memerlukan koneksi internet untuk mengambil data film dari TMDB. Pemutaran trailer paling optimal pada perangkat dengan layanan Google.
 
----
+## 🛠️ Stack Teknologi & Arsitektur
+Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsip *Single Source of Truth* pada lapisan Repository:
+- **Bahasa:** Kotlin
+- **UI & Layouting:** Jetpack Compose (Material 3)
+- **Reactivity & Threading:** Kotlin Coroutines beserta StateFlow
+- **Networking:** Retrofit + OkHttp + Gson (sumber data **TMDB API**)
+- **Lapisan Penyimpanan:** Room Database (SQLite) untuk watchlist & akun, serta SharedPreferences untuk *session*
+- **Lainnya:** Coil (image loading), Navigation Compose, WebView (YouTube *iframe embed*)
+- **Minimum SDK:** Android 7.0 (API 24)
 
-### Step 2 — Replace Project Files
-
-Replace **every** generated file with the files from this project. The complete structure is:
-
-```
-MovieCatalogue/
-├── gradle/
-│   ├── libs.versions.toml          ← Version catalog
-│   └── wrapper/
-│       └── gradle-wrapper.properties
-├── app/
-│   ├── build.gradle.kts            ← App-level Gradle
-│   ├── proguard-rules.pro
-│   └── src/main/
-│       ├── AndroidManifest.xml
-│       ├── kotlin/com/example/moviecatalogue/
-│       │   ├── MainActivity.kt
-│       │   ├── MovieCatalogueApp.kt
-│       │   ├── data/
-│       │   │   ├── local/
-│       │   │   │   ├── MovieDao.kt
-│       │   │   │   ├── MovieDatabase.kt
-│       │   │   │   └── MovieEntity.kt
-│       │   │   ├── remote/
-│       │   │   │   ├── ApiService.kt
-│       │   │   │   └── Dtos.kt
-│       │   │   └── repository/
-│       │   │       └── MovieRepositoryImpl.kt
-│       │   ├── di/
-│       │   │   └── ServiceLocator.kt
-│       │   ├── domain/
-│       │   │   ├── Movie.kt
-│       │   │   └── MovieRepository.kt
-│       │   └── ui/
-│       │       ├── components/
-│       │       │   ├── MovieCard.kt
-│       │       │   └── MovieSlider.kt
-│       │       ├── navigation/
-│       │       │   └── Navigation.kt
-│       │       ├── screens/
-│       │       │   ├── detail/
-│       │       │   │   ├── DetailScreen.kt
-│       │       │   │   └── DetailViewModel.kt
-│       │       │   ├── home/
-│       │       │   │   ├── HomeScreen.kt
-│       │       │   │   └── HomeViewModel.kt
-│       │       │   ├── search/
-│       │       │   │   ├── SearchScreen.kt
-│       │       │   │   └── SearchViewModel.kt
-│       │       │   └── watchlist/
-│       │       │       ├── WatchlistScreen.kt
-│       │       │       └── WatchlistViewModel.kt
-│       │       └── theme/
-│       │           ├── Color.kt
-│       │           ├── Theme.kt
-│       │           └── Typography.kt
-│       └── res/
-│           ├── values/
-│           │   ├── strings.xml
-│           │   └── themes.xml
-│           └── xml/
-│               └── network_security_config.xml
-├── build.gradle.kts                ← Root Gradle
-├── settings.gradle.kts
-└── gradle.properties
-```
-
-**How to replace files:**
-- In Android Studio's **Project** panel (left sidebar), switch the view to **Project** (not Android)
-- Navigate to each file, right-click → **Delete**, then right-click the folder → **New → Kotlin Class/File** to create replacement files
-- Paste the file contents from this project
-
-**Tip:** For the `gradle/` and `res/` files, you can use the OS file explorer to paste directly into the project folder, then click **Sync Now** in Android Studio.
-
----
-
-### Step 3 — Sync Gradle
-
-After copying all files:
-
-1. Click the **"Sync Now"** yellow bar that appears at the top of the editor, **OR**
-2. Go to **File → Sync Project with Gradle Files**
-
-Android Studio will download all dependencies (~200 MB first time). Wait for the sync to complete (check the bottom status bar).
-
----
-
-### Step 4 — Add a Launcher Icon (Optional but Recommended)
-
-The app references `@mipmap/ic_launcher`. Android Studio generates a default one, so it will compile fine. To add a custom icon:
-
-1. Right-click `app/src/main/res` → **New → Image Asset**
-2. Choose your icon image
-3. Click **Next → Finish**
-
----
-
-### Step 5 — Run the App
-
-1. Connect an Android device (API 24+) via USB with **USB Debugging** enabled, **OR** create an emulator via **Device Manager** (AVD)
-2. Select your device in the toolbar dropdown
-3. Click the **▶ Run** button (Shift+F10)
-
-The app will build and install. First launch fetches data from TMDb.
-
----
-
-## Troubleshooting
-
-### "Unresolved reference" errors after pasting files
-→ Check the **package name** at the top of each file matches `com.example.moviecatalogue`. If you used a different package name when creating the project, do a global **Find & Replace** (Ctrl+Shift+R) to change `com.example.moviecatalogue` to your package.
-
-### Gradle sync fails — "Could not resolve..."
-→ Check your internet connection. Then: **File → Invalidate Caches → Invalidate and Restart**.
-
-### App crashes on launch — "Network error"
-→ The device/emulator has no internet. Check the emulator's network settings or test on a real device.
-
-### YouTube player shows black screen
-→ YouTube requires Google Play Services. Use a physical device or an emulator with Play Store enabled (choose a "Google Play" system image in the AVD wizard).
-
-### Build error: "KSP not configured"
-→ Ensure the root `build.gradle.kts` includes `alias(libs.plugins.kotlin.ksp) apply false` and the app `build.gradle.kts` has `alias(libs.plugins.kotlin.ksp)`.
-
----
-
-## API Credentials
-
-The TMDb API key and Bearer Token are already embedded in `BuildConfig` via `app/build.gradle.kts`. No additional configuration is needed.
-
-```
-Base URL:  https://api.themoviedb.org/3/
-Image URL: https://image.tmdb.org/t/p/w500/
-```
-
----
-
-## Architecture Overview
-
-```
-UI Layer (Compose Screens)
-    ↓ collectAsStateWithLifecycle
-ViewModel (StateFlow<UiState>)
-    ↓ suspend functions / Flow
-Repository Interface (domain)
-    ↑ implements
-MovieRepositoryImpl (data)
-    ├── ApiService (Retrofit) — remote data
-    └── MovieDao (Room) — local data / offline cache
-```
-
-Data flows **one-way**: Repository → ViewModel → UI. The Room database is the **Single Source of Truth** for the Watchlist, making it fully offline-capable.
+## 📋 Changelog / Catatan Rilis
+### v1.0.0 (Rilis Publik)
+- Penjelajahan film berdasarkan kategori: Trending, Now Playing, Popular, dan Top Rated.
+- *Hero slider* otomatis dengan *infinite scroll* di halaman Home.
+- Pencarian film *debounced* dengan filter genre.
+- Halaman detail film lengkap dengan pemutaran trailer YouTube *full-screen*.
+- Autentikasi lokal: register, login email & password, serta mode Guest.
+- Watchlist per-akun yang tersimpan secara offline.
+- Halaman Profile menampilkan nama, email, dan daftar watchlist.
+- Navigasi *swipe* antar tab, *collapsing top bar*, dan tema gelap Material 3.
