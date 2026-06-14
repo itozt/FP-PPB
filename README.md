@@ -26,7 +26,7 @@
 
 ## 📱 Screenshot Terkini
 | Home | Search | Detail | Profile |
-| :---: | :---: | :---: |
+| :---: | :---: | :---: | :---: |
 | <img width="738" height="1600" alt="dashboard - login" src="https://github.com/user-attachments/assets/c00b27be-49e5-4b90-9c4e-af9a4588c4fa" /> | <img width="738" height="1600" alt="search page" src="https://github.com/user-attachments/assets/bcd1f62e-4f70-41ea-9911-70a0a837e1dc" /> | <img width="683" height="1600" alt="detail film" src="https://github.com/user-attachments/assets/98f04475-df2e-4902-87d1-c38f92b1e6d2" /> | <img width="738" height="1600" alt="profile - login" src="https://github.com/user-attachments/assets/8c788ce7-2146-4d33-9f49-4414e983ce0a" /> |
 
 
