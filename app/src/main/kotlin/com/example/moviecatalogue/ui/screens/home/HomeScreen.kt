@@ -3,13 +3,21 @@ package com.example.moviecatalogue.ui.screens.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.moviecatalogue.R
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,14 +37,18 @@ import com.example.moviecatalogue.ui.components.ShimmerSliderCard
  * - Aesthetic & minimalist: dark layout, no redundant chrome
  * - Error recovery: Snackbar with Retry action on network failure
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     repository: MovieRepository,
-    onMovieClick: (Int) -> Unit
+    onMovieClick: (Int) -> Unit,
+    isGuest: Boolean = false,
+    onAccountAction: () -> Unit = {}
 ) {
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory(repository))
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { msg ->
@@ -51,8 +63,11 @@ fun HomeScreen(
     }
 
     Scaffold(
+        modifier       = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar         = { HomeTopBar(scrollBehavior, isGuest, onAccountAction) },
         snackbarHost   = { SnackbarHost(snackbarHostState) },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         if (uiState.isLoading) {
             HomeShimmerContent(modifier = Modifier.padding(paddingValues))
@@ -76,8 +91,6 @@ private fun HomeContent(
         modifier            = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
-        item { HomeTopBar() }
-
         // Hero slider (trending)
         if (uiState.trendingMovies.isNotEmpty()) {
             item {
@@ -124,29 +137,50 @@ private fun HomeContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeTopBar() {
-    Row(
-        modifier              = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 0.dp),
-        verticalAlignment     = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text  = "MovFlix",
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.Black,
-                letterSpacing = 0.sp,
-                color      = MaterialTheme.colorScheme.primary
+private fun HomeTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    isGuest: Boolean,
+    onAccountAction: () -> Unit
+) {
+    TopAppBar(
+        scrollBehavior = scrollBehavior,
+        title = {
+            Image(
+                painter = painterResource(R.drawable.movflix_logo),
+                contentDescription = "MovFlix",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.height(36.dp)
             )
+        },
+        actions = {
+            if (isGuest) {
+                TextButton(onClick = onAccountAction) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Login,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Masuk", style = MaterialTheme.typography.labelLarge)
+                }
+            } else {
+                IconButton(onClick = onAccountAction) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Logout,
+                        contentDescription = "Logout",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor         = MaterialTheme.colorScheme.background,
+            scrolledContainerColor = MaterialTheme.colorScheme.background,
+            titleContentColor      = MaterialTheme.colorScheme.primary
         )
-        Text(
-            text  = "Movies",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+    )
 }
 
 @Composable
@@ -181,7 +215,6 @@ private fun HomeShimmerContent(modifier: Modifier = Modifier) {
         modifier            = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
-        item { HomeTopBar() }
         item {
             ShimmerSliderCard(modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(20.dp))

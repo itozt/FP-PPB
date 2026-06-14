@@ -14,7 +14,7 @@ data class DetailUiState(
     val isInWatchlist: Boolean = false,
     val isWatchlistLoading: Boolean = false,
     val errorMessage: String? = null,
-    val showTrailerDialog: Boolean = false
+    val isTrailerPlaying: Boolean = false
 )
 
 class DetailViewModel(
@@ -74,12 +74,13 @@ class DetailViewModel(
         }
     }
 
-    fun showTrailer() {
-        _uiState.update { it.copy(showTrailerDialog = true) }
+    fun playTrailer() {
+        if (_uiState.value.movieDetail?.trailerKey.isNullOrBlank()) return
+        _uiState.update { it.copy(isTrailerPlaying = true) }
     }
 
-    fun dismissTrailer() {
-        _uiState.update { it.copy(showTrailerDialog = false) }
+    fun closeTrailer() {
+        _uiState.update { it.copy(isTrailerPlaying = false) }
     }
 
     fun retryLoad() = loadMovieDetail()

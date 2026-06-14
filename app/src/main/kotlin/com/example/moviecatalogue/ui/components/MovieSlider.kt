@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -46,17 +45,26 @@ fun MovieSlider(
 ) {
     if (movies.isEmpty()) return
 
-    val pagerState = rememberPagerState(pageCount = { movies.size })
+    val pageCount = movies.size
+    val infinite = pageCount > 1
+
+    // For infinite scrolling we back the pager with a very large virtual page
+    // count and map each virtual page back to a real movie via modulo. Starting
+    // near the middle (on a multiple of pageCount) gives room to swipe both ways.
+    val virtualCount = if (infinite) pageCount * 1000 else 1
+    val startPage = remember(pageCount) {
+        if (infinite) (virtualCount / 2).let { it - it % pageCount } else 0
+    }
+    val pagerState = rememberPagerState(initialPage = startPage, pageCount = { virtualCount })
     var userInteracting by remember { mutableStateOf(false) }
 
-    // Auto-scroll every 4 s; pauses while user is touching
+    // Auto-scroll every 4 s; always advances forward (wraps around infinitely).
     LaunchedEffect(userInteracting) {
-        if (!userInteracting) {
+        if (!userInteracting && infinite) {
             while (true) {
                 delay(4_000)
-                val next = (pagerState.currentPage + 1) % movies.size
                 pagerState.animateScrollToPage(
-                    page = next,
+                    page = pagerState.currentPage + 1,
                     animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
                 )
             }
@@ -78,15 +86,16 @@ fun MovieSlider(
             state = pagerState,
             modifier = Modifier.fillMaxWidth()
         ) { page ->
+            val movie = movies[page % pageCount]
             SliderItem(
-                movie = movies[page],
-                onClick = { onMovieClick(movies[page].id) }
+                movie = movie,
+                onClick = { onMovieClick(movie.id) }
             )
         }
 
         PagerIndicator(
-            pagerState = pagerState,
-            pageCount = movies.size,
+            selectedIndex = pagerState.currentPage % pageCount,
+            pageCount = pageCount,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 12.dp)
@@ -202,7 +211,7 @@ private fun SliderItem(
 
 @Composable
 private fun PagerIndicator(
-    pagerState: PagerState,
+    selectedIndex: Int,
     pageCount: Int,
     modifier: Modifier = Modifier
 ) {
@@ -212,7 +221,7 @@ private fun PagerIndicator(
         verticalAlignment = Alignment.CenterVertically
     ) {
         repeat(pageCount) { index ->
-            val isSelected = pagerState.currentPage == index
+            val isSelected = selectedIndex == index
             val width by animateDpAsState(
                 targetValue = if (isSelected) 20.dp else 6.dp,
                 animationSpec = tween(300),

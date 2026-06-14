@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi Aplikasi MovFlix</title>
+    <style>
+        /* Container utama */
+        .blog-wrapper {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            padding: 20px;
+            background-color: transparent;
+        }
+
+        /* Bagian Profil/Detail Diri */
+        .student-info {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-left: 4px solid #b8860b;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .student-info p {
+            margin: 5px 0;
+            font-size: 15px;
+        }
+        .student-info span {
+            color: #ffd700;
+            font-weight: bold;
+            display: inline-block;
+            width: 120px;
+        }
+
+        /* Tabel Perkembangan Teknologi */
+        .tech-table-container {
+            overflow-x: auto;
+        }
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: transparent;
+            border: 1px solid #b8860b;
+        }
+        .tech-table thead {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #b8860b;
+        }
+        .tech-table th {
+            padding: 12px 15px;
+            text-align: left;
+            color: #ffd700;
+            border: 1px solid #b8860b;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+        .tech-table td {
+            padding: 12px 15px;
+            border: 1px solid #b8860b;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+        .tech-table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .tech-table tbody tr:hover {
+            background-color: rgba(184, 134, 11, 0.2);
+            transition: 0.3s;
+        }
+
+        /* Gambar di dalam tabel */
+        .table-img {
+            max-width: 100px;
+            max-height: 100px;
+            width: auto;
+            height: auto;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+            border: 1px solid #b8860b;
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        h1, h2, h3 {
+            color: #b6a271;
+        }
+
+        /* Tambahan styling untuk kompatibilitas content */
+        .justified-text {
+            text-align: justify;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        pre {
+            border: 2px solid #b6a271;
+            color: #D3D3D3;
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .code-label {
+            background-color: #b8860b;
+            color: #ffd700;
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 0;
+            font-weight: bold;
+            font-size: 0.9em;
+            border-left: 2px solid #b6a271;
+            border-right: 2px solid #b6a271;
+            border-top: 2px solid #b6a271;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            border-bottom: 2px solid #b8860b;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .subsection-title {
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .file-tree {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #b8860b;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            font-size: 0.75em;
+            color: #D3D3D3;
+            white-space: pre;
+            line-height: 1.4;
+        }
+
+        .file-tree code {
+            color: #ffd700;
+            white-space: pre;
+        }
+
+        .function-box {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #b8860b;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+        }
+
+        .function-name {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+        }
+
+        .feature-list {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #b8860b;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+        }
+
+        .feature-list ul {
+            margin-left: 20px;
+        }
+
+        .feature-list li {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .architecture-box {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #b8860b;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .architecture-box p {
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .arrow {
+            text-align: center;
+            color: #b8860b;
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: transparent;
+            border: 1px solid #b8860b;
+            margin-bottom: 20px;
+        }
+
+        table th {
+            background-color: rgba(0, 0, 0, 0.4);
+            color: #ffd700;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #b8860b;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        table td {
+            padding: 12px;
+            border: 1px solid #b8860b;
+            text-align: justify;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        table tbody tr:hover {
+            background-color: rgba(184, 134, 11, 0.2);
+            transition: 0.3s;
+        }
+
+        .highlight {
+            background-color: rgba(184, 134, 11, 0.3);
+            color: #ffd700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        ul {
+            color: #ffffff;
+        }
+
+        strong {
+            color: #ffd700;
+        }
+
+        /* === Tambahan: Daftar Isi (Table of Contents) === */
+        .toc {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #b8860b;
+            border-radius: 5px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+        }
+        .toc .toc-title {
+            color: #b6a271;
+            font-size: 1.4em;
+            border-bottom: 2px solid #b8860b;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .toc ol {
+            margin: 0 0 0 20px;
+            color: #ffffff;
+            line-height: 2;
+        }
+        .toc ol li {
+            margin-bottom: 4px;
+        }
+        .toc a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+            color: #b6a271;
+        }
+        /* === Tambahan: Area placeholder screenshot === */
+        .screenshot-placeholder {
+            border: 2px dashed #b8860b;
+            border-radius: 8px;
+            padding: 30px 15px;
+            text-align: center;
+            color: #b6a271;
+            font-style: italic;
+            margin: 15px 0;
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-wrapper">
+        <!-- Student Info Section -->
+        <div class="student-info">
+            <p><span>Nama :</span> [Isi Nama]</p>
+            <p><span>NRP :</span> [Isi NRP]</p>
+            <p><span>Mata Kuliah :</span> Pemrograman Perangkat Bergerak</p>
+            <p><span>Tanggal :</span> [Isi Tanggal]</p>
+            <p><span>Pertemuan :</span> Final Project</p>
+            <p><span>Proyek :</span> MovFlix - Aplikasi Katalog Film Android</p>
+            <p><span>Kode :</span> <a href="#" target="_blank">Link Github</a></p>
+            <p><span>Presentasi :</span> <a href="#" target="_blank">Link Canva</a></p>
+            <p><span>Video :</span> <a href="#" target="_blank">Link Youtube</a></p>
+        </div>
+
+        <!-- Logo Aplikasi -->
+        <div class="screenshot-placeholder">[ Area Screenshot &mdash; sisipkan logo aplikasi MovFlix di sini ]</div>
+
+        <!-- ====================== DAFTAR ISI ====================== -->
+        <div class="toc">
+            <div class="toc-title">Daftar Isi</div>
+            <ol>
+                <li><a href="#sec1">Deskripsi Aplikasi</a></li>
+                <li><a href="#sec2">Fitur-Fitur Utama Aplikasi</a></li>
+                <li><a href="#sec3">Arsitektur Aplikasi</a></li>
+                <li><a href="#sec4">Struktur File dan Folder Proyek</a></li>
+                <li><a href="#sec5">Penjelasan Detil Kode MainActivity.kt</a></li>
+                <li><a href="#sec6">Alur Eksekusi Aplikasi</a></li>
+                <li><a href="#sec7">Interaksi User dan Event Flow</a></li>
+                <li><a href="#sec8">Teknologi dan Dependencies</a></li>
+                <li><a href="#sec9">Kesimpulan</a></li>
+            </ol>
+        </div>
+
+        <!-- SECTION 1: DESKRIPSI APLIKASI -->
+        <div class="section" id="sec1">
+            <h2 class="section-title">1. Deskripsi Aplikasi</h2>
+
+            <div class="justified-text">
+                <strong>MovFlix</strong> adalah aplikasi <span class="highlight">katalog film (movie catalogue)</span> Android yang menampilkan daftar film, detail film, serta pemutaran trailer. Seluruh data film diambil secara <em>real-time</em> dari <span class="highlight">TMDB (The Movie Database) API</span>. Aplikasi dibangun sepenuhnya menggunakan <span class="highlight">Jetpack Compose</span>, framework UI declarative modern dari Android, untuk menghadirkan antarmuka yang responsif dan mulus.
+            </div>
+
+            <div class="justified-text">
+                Pengguna dapat menjelajahi film berdasarkan kategori (Trending, Now Playing, Popular, Top Rated), mencari film dengan filter genre, melihat detail lengkap sebuah film, dan menonton trailer langsung di dalam aplikasi melalui <em>YouTube embed</em>. MovFlix juga dilengkapi sistem <strong>autentikasi lokal</strong> (login, register, dan guest) serta fitur <strong>watchlist</strong> yang tersimpan terpisah per akun pengguna.
+            </div>
+
+            <div class="justified-text">
+                <strong>Bahasa Antarmuka:</strong> antarmuka utama menggunakan istilah Inggris yang umum (Home, Search, Watch Trailer) dengan beberapa bagian berbahasa Indonesia. <strong>Minimum SDK:</strong> aplikasi kompatibel dengan Android 7.0 (API Level 24) ke atas. <strong>Arsitektur:</strong> menggunakan pola <span class="highlight">MVVM</span> dengan tema gelap (dark theme) sinematik.
+            </div>
+
+            <div class="screenshot-placeholder">[ Area Screenshot &mdash; tampilan utama / Home aplikasi ]</div>
+        </div>
+
+        <!-- SECTION 2: FITUR-FITUR APLIKASI -->
+        <div class="section" id="sec2">
+            <h2 class="section-title">2. Fitur-Fitur Utama Aplikasi</h2>
+
+            <div class="subsection-title">2.1 Autentikasi Lokal (Login, Register, Guest)</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Pengguna dapat membuat akun (register), masuk (login) dengan email &amp; password, atau memilih <strong>Masuk sebagai Guest</strong> tanpa akun.
+                </div>
+                <div class="justified-text">
+                    <strong>Implementasi:</strong> Data akun disimpan lokal di <span class="highlight">Room Database</span>. Password tidak disimpan dalam bentuk teks asli, melainkan di-hash dengan <span class="highlight">SHA-256 + salt</span>. Status login (session) disimpan menggunakan <span class="highlight">SharedPreferences</span> sehingga pengguna tetap login setelah aplikasi ditutup.
+                </div>
+            </div>
+
+            <div class="subsection-title">2.2 Navigasi Swipe Berbasis Pager</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Tiga menu utama &mdash; <strong>Home</strong>, <strong>Search</strong>, dan <strong>Profile</strong> &mdash; dapat dipindah dengan mengusap layar (swipe) maupun menekan <em>bottom navigation bar</em>. Keduanya tersinkron dua arah.
+                </div>
+                <div class="justified-text">
+                    <strong>Implementasi:</strong> Menggunakan <span class="highlight">HorizontalPager</span> yang dipasangkan dengan <code>NavigationBar</code> melalui <code>PagerState</code>.
+                </div>
+            </div>
+
+            <div class="subsection-title">2.3 Beranda Kategori dengan Hero Slider</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Halaman Home menampilkan <em>hero slider</em> film trending yang berganti otomatis, lalu baris kategori <strong>Now Playing</strong>, <strong>Popular</strong>, dan <strong>Top Rated</strong> yang dapat di-scroll horizontal.
+                </div>
+                <div class="justified-text">
+                    <strong>Collapsing Top Bar:</strong> Header akan tersembunyi saat layar di-scroll ke bawah dan muncul kembali saat di-scroll ke atas (<em>enter-always scroll behavior</em>). Saat menunggu data, ditampilkan <em>shimmer skeleton</em>.
+                </div>
+            </div>
+
+            <div class="subsection-title">2.4 Pencarian dengan Filter Genre</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Pencarian film secara <em>debounced</em> (tanpa menekan tombol submit) dan filter berdasarkan <em>genre chips</em>. Hasil ditampilkan dalam grid, lengkap dengan <em>empty state</em> yang jelas.
+                </div>
+            </div>
+
+            <div class="subsection-title">2.5 Detail Film dan Pemutar Trailer</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Halaman detail menampilkan backdrop, poster, rating, durasi, genre, sinopsis, dan tombol <strong>Watch Trailer</strong>.
+                </div>
+                <div class="justified-text">
+                    <strong>Pemutar Trailer:</strong> Trailer dari TMDB (berupa YouTube video id) diputar <em>full-screen landscape</em> di dalam aplikasi menggunakan <span class="highlight">WebView</span> yang memuat <em>iframe embed</em> YouTube. Pendekatan iframe statis dipilih karena lebih andal dibanding membuka URL embed langsung.
+                </div>
+            </div>
+
+            <div class="subsection-title">2.6 Watchlist Per-Akun</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Pengguna dapat menyimpan film ke watchlist. Watchlist <strong>terikat ke akun</strong> &mdash; setiap akun memiliki daftar sendiri, dan akan muncul kembali saat login dengan akun yang sama.
+                </div>
+                <div class="justified-text">
+                    <strong>Batasan Guest:</strong> Akun guest <strong>tidak bisa</strong> menyimpan watchlist. Saat guest menekan tombol simpan, muncul <em>dialog</em> peringatan untuk login atau membatalkan. Penghapusan watchlist dilengkapi <em>undo</em> via Snackbar.
+                </div>
+            </div>
+
+            <div class="subsection-title">2.7 Halaman Profile</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Menampilkan nama dan email pengguna beserta daftar watchlist miliknya. Untuk guest, ditampilkan ajakan untuk login.
+                </div>
+            </div>
+
+            <div class="screenshot-placeholder">[ Area Screenshot &mdash; kumpulan fitur (Home, Search, Detail, Profile) ]</div>
+        </div>
+
+        <!-- SECTION 3: ARSITEKTUR APLIKASI -->
+        <div class="section" id="sec3">
+            <h2 class="section-title">3. Arsitektur Aplikasi</h2>
+
+            <div class="justified-text">
+                MovFlix menggunakan arsitektur <span class="highlight">MVVM (Model-View-ViewModel)</span> yang direkomendasikan Google. Arsitektur ini memisahkan logika bisnis dari antarmuka, sehingga kode lebih terstruktur, <em>testable</em>, dan mudah dirawat. Lapisan data menerapkan prinsip <strong>Single Source of Truth</strong> melalui Repository.
+            </div>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <div class="architecture-box">
+                    <p><strong>UI Layer (Presentation)</strong></p>
+                    <p>Jetpack Compose, Material 3, Navigation, HorizontalPager, Coil</p>
+                </div>
+                <div class="arrow">&#9660;</div>
+                <div class="architecture-box">
+                    <p><strong>ViewModel Layer (State Management)</strong></p>
+                    <p>ViewModel, StateFlow, collectAsState</p>
+                </div>
+                <div class="arrow">&#9660;</div>
+                <div class="architecture-box">
+                    <p><strong>Repository Layer (Data Abstraction)</strong></p>
+                    <p>MovieRepository, AuthRepository, ServiceLocator (DI)</p>
+                </div>
+                <div class="arrow">&#9660;</div>
+                <div class="architecture-box">
+                    <p><strong>Data Layer</strong></p>
+                    <p>Remote: Retrofit + OkHttp (TMDB API) &nbsp;|&nbsp; Local: Room (SQLite), SharedPreferences</p>
+                </div>
+            </div>
+
+            <div class="subsection-title">3.1 Penjelasan Setiap Layer</div>
+            <div class="tech-table-container">
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Layer</th>
+                            <th>Deskripsi</th>
+                            <th>Tanggung Jawab</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>UI Layer</strong></td>
+                            <td>Lapisan presentasi berbasis Jetpack Compose &amp; Material 3 untuk UI deklaratif yang modern.</td>
+                            <td>Menampilkan data, menangkap input, navigasi antar layar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ViewModel</strong></td>
+                            <td>Mengelola state UI dengan StateFlow dan menjembatani UI dengan Repository.</td>
+                            <td>Mengelola state, menangani event UI, menyediakan data ke UI</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Repository</strong></td>
+                            <td>Abstraksi sumber data. Menggabungkan data remote (TMDB) dan local (Room) menjadi satu sumber.</td>
+                            <td>Menyediakan data, logika bisnis (watchlist per-akun, kandidat trailer)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Layer</strong></td>
+                            <td>Retrofit untuk REST API TMDB; Room untuk database lokal; SharedPreferences untuk session.</td>
+                            <td>Network request, akses &amp; penyimpanan database</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="subsection-title">3.2 Dependency Injection</div>
+            <div class="justified-text">
+                Aplikasi memakai DI manual sederhana melalui object <span class="highlight">ServiceLocator</span> yang membuat instance <em>singleton</em> dari Retrofit, Room database, serta Repository. Pendekatan ini ringan dan cukup untuk lingkup proyek tanpa overhead Hilt/Dagger.
+            </div>
+        </div>
+
+        <!-- SECTION 4: STRUKTUR FILE DAN FOLDER -->
+        <div class="section" id="sec4">
+            <h2 class="section-title">4. Struktur File dan Folder Proyek</h2>
+
+            <div class="justified-text">
+                Berikut struktur direktori utama proyek MovFlix beserta fungsi tiap bagiannya:
+            </div>
+
+            <div class="code-label">Struktur Proyek (ringkas)</div>
+            <div class="file-tree"><code>FP-PPB/
+&#9492;&#9472;&#9472; app/src/main/
+    &#9500;&#9472;&#9472; kotlin/com/example/moviecatalogue/
+    &#9474;   &#9500;&#9472;&#9472; MainActivity.kt          Entry point + setup navigation
+    &#9474;   &#9500;&#9472;&#9472; MovieCatalogueApp.kt     Application class
+    &#9474;   &#9500;&#9472;&#9472; SplashScreen.kt          Splash screen (logo)
+    &#9474;   &#9500;&#9472;&#9472; data/
+    &#9474;   &#9474;   &#9500;&#9472;&#9472; auth/                PasswordHasher, SessionManager
+    &#9474;   &#9474;   &#9500;&#9472;&#9472; local/               Room: MovieDao, UserDao,
+    &#9474;   &#9474;   &#9474;                        MovieDatabase, MovieEntity, UserEntity
+    &#9474;   &#9474;   &#9500;&#9472;&#9472; remote/              ApiService (TMDB), Dtos
+    &#9474;   &#9474;   &#9492;&#9472;&#9472; repository/          MovieRepositoryImpl, AuthRepositoryImpl
+    &#9474;   &#9500;&#9472;&#9472; di/
+    &#9474;   &#9474;   &#9492;&#9472;&#9472; ServiceLocator.kt    Dependency Injection
+    &#9474;   &#9500;&#9472;&#9472; domain/                  Model + interface (Movie, UserSession,
+    &#9474;   &#9474;                            MovieRepository, AuthRepository)
+    &#9474;   &#9492;&#9472;&#9472; ui/
+    &#9474;       &#9500;&#9472;&#9472; components/          MovieCard, MovieSlider,
+    &#9474;       &#9474;                        YouTubeTrailerPlayer
+    &#9474;       &#9500;&#9472;&#9472; navigation/          Navigation.kt (NavHost + Pager)
+    &#9474;       &#9500;&#9472;&#9472; screens/
+    &#9474;       &#9474;   &#9500;&#9472;&#9472; home/            HomeScreen, HomeViewModel
+    &#9474;       &#9474;   &#9500;&#9472;&#9472; search/          SearchScreen, SearchViewModel
+    &#9474;       &#9474;   &#9500;&#9472;&#9472; detail/          DetailScreen, DetailViewModel
+    &#9474;       &#9474;   &#9500;&#9472;&#9472; profile/         ProfileScreen, ProfileViewModel
+    &#9474;       &#9474;   &#9492;&#9472;&#9472; auth/            LoginScreen, RegisterScreen, AuthViewModel
+    &#9474;       &#9492;&#9472;&#9472; theme/               Color, Theme, Typography
+    &#9500;&#9472;&#9472; res/                         Drawable, values
+    &#9492;&#9472;&#9472; AndroidManifest.xml</code></div>
+
+            <div class="subsection-title">4.1 Penjelasan Folder Utama</div>
+
+            <div class="function-box">
+                <div class="function-name">data/remote/</div>
+                <div class="justified-text">
+                    <strong>ApiService.kt</strong> mendefinisikan endpoint TMDB (trending, now playing, popular, top rated, search, detail, videos, genres) dengan Retrofit. <strong>Dtos.kt</strong> berisi Data Transfer Object untuk parsing JSON respons API.
+                </div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">data/local/</div>
+                <div class="justified-text">
+                    Implementasi Room: <strong>MovieDao</strong> &amp; <strong>UserDao</strong> (operasi CRUD), <strong>MovieDatabase</strong> (kelas database), <strong>MovieEntity</strong> (watchlist, ber-key gabungan id+userId) dan <strong>UserEntity</strong> (akun pengguna).
+                </div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">data/auth/</div>
+                <div class="justified-text">
+                    <strong>PasswordHasher.kt</strong> melakukan hashing password (SHA-256 + salt). <strong>SessionManager.kt</strong> menyimpan &amp; mengekspos session pengguna sebagai <code>StateFlow</code> melalui SharedPreferences.
+                </div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">data/repository/ &amp; domain/</div>
+                <div class="justified-text">
+                    <strong>MovieRepositoryImpl</strong> &amp; <strong>AuthRepositoryImpl</strong> mengimplementasikan interface di <strong>domain/</strong>. Repository film menggabungkan API dan Room serta menyaring watchlist sesuai user aktif.
+                </div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">ui/navigation/</div>
+                <div class="justified-text">
+                    <strong>Navigation.kt</strong> berisi <code>AppNavigation</code> (NavHost: Splash, Login, Register, Main, Detail) dan <code>MainScreen</code> (HorizontalPager + bottom navigation).
+                </div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">ui/screens/ &amp; ui/components/</div>
+                <div class="justified-text">
+                    Tiap fitur memiliki <em>Screen</em> (Composable) dan <em>ViewModel</em>-nya. Komponen yang dipakai berulang seperti <strong>MovieCard</strong>, <strong>MovieSlider</strong>, dan <strong>YouTubeTrailerPlayer</strong> berada di <strong>components/</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5: PENJELASAN MAINACTIVITY.KT -->
+        <div class="section" id="sec5">
+            <h2 class="section-title">5. Penjelasan Detil Kode MainActivity.kt</h2>
+
+            <div class="justified-text">
+                <strong>MainActivity.kt</strong> adalah <em>single activity</em> yang menjadi entry point aplikasi. Tugasnya menyiapkan dependency, mengaktifkan tema, dan menampilkan graph navigasi. Berikut penjelasan tiap bagiannya.
+            </div>
+
+            <div class="subsection-title">5.1 Class MainActivity dan onCreate()</div>
+            <div class="code-label">MainActivity.kt</div>
+            <pre>class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Mengaktifkan tampilan edge-to-edge (immersive)
+        enableEdgeToEdge()
+
+        // Dependency Injection via ServiceLocator
+        val repository = ServiceLocator.provideRepository(applicationContext)
+        val authRepository = ServiceLocator.provideAuthRepository(applicationContext)
+
+        setContent {
+            FinalProjectTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    AppNavigation(
+                        repository = repository,
+                        authRepository = authRepository
+                    )
+                }
+            }
+        }
+    }
+}</pre>
+
+            <div class="justified-text"><strong>Penjelasan:</strong></div>
+            <ul style="text-align: justify; margin-left: 20px;">
+                <li><strong>ComponentActivity:</strong> base activity yang mendukung Jetpack Compose.</li>
+                <li><strong>enableEdgeToEdge():</strong> membuat konten menggambar hingga di belakang status bar &amp; navigation bar untuk tampilan modern.</li>
+                <li><strong>ServiceLocator.provideRepository / provideAuthRepository:</strong> mengambil instance singleton Repository film dan Repository autentikasi (Dependency Injection manual).</li>
+                <li><strong>setContent { }:</strong> mendefinisikan seluruh UI Compose untuk activity ini.</li>
+                <li><strong>FinalProjectTheme:</strong> membungkus aplikasi dengan tema gelap (Material 3) sekaligus mengatur warna system bar.</li>
+                <li><strong>AppNavigation(...):</strong> memasang graph navigasi dengan kedua repository sebagai dependency.</li>
+            </ul>
+
+            <div class="subsection-title">5.2 AppNavigation &mdash; Graph Navigasi</div>
+            <div class="code-label">Navigation.kt (ringkas)</div>
+            <pre>@Composable
+fun AppNavigation(repository: MovieRepository, authRepository: AuthRepository) {
+    val navController = rememberNavController()
+    val session by authRepository.session.collectAsState()
+    val isGuest = session?.isGuest == true
+
+    NavHost(navController, startDestination = Screen.Splash.route) {
+        composable(Screen.Splash.route) {
+            SplashScreen(onTimeout = {
+                // Sudah login -> Main, belum -> Login
+                val target = if (session != null) Screen.Main.route else Screen.Login.route
+                navController.navigate(target) { popUpTo(Screen.Splash.route) { inclusive = true } }
+            })
+        }
+        composable(Screen.Login.route) { /* LoginScreen */ }
+        composable(Screen.Register.route) { /* RegisterScreen */ }
+        composable(Screen.Main.route) { /* MainScreen (pager) */ }
+        composable(Screen.Detail.route) { /* DetailScreen */ }
+    }
+}</pre>
+            <div class="justified-text">
+                <strong>Penjelasan:</strong> <code>NavHost</code> mendaftarkan seluruh rute. State <code>session</code> diamati sebagai <code>StateFlow</code> sehingga UI bereaksi otomatis saat login/logout. Splash menentukan tujuan awal: <strong>Main</strong> jika sudah ada sesi, atau <strong>Login</strong> jika belum.
+            </div>
+
+            <div class="subsection-title">5.3 MainScreen &mdash; Pager + Bottom Navigation</div>
+            <div class="code-label">Navigation.kt (ringkas)</div>
+            <pre>@Composable
+fun MainScreen(/* repository, authRepository, isGuest, callbacks */) {
+    val pagerState = rememberPagerState(pageCount = { bottomNavItems.size })
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                bottomNavItems.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        selected = pagerState.currentPage == index,
+                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                        icon = { /* Home / Search / Profile */ },
+                        label = { Text(item.label) }
+                    )
+                }
+            }
+        }
+    ) { padding ->
+        HorizontalPager(state = pagerState, modifier = Modifier.padding(padding)) { page ->
+            when (page) {
+                0 -> HomeScreen(...)
+                1 -> SearchScreen(...)
+                2 -> ProfileScreen(...)
+            }
+        }
+    }
+}</pre>
+            <div class="justified-text">
+                <strong>Penjelasan:</strong> <code>HorizontalPager</code> menampung tiga halaman yang bisa digeser (swipe). <code>NavigationBar</code> dan pager dihubungkan lewat <code>pagerState.currentPage</code> dan <code>animateScrollToPage()</code>, sehingga menekan menu dan menggeser layar saling sinkron.
+            </div>
+
+            <div class="subsection-title">5.4 SplashScreen</div>
+            <div class="code-label">SplashScreen.kt (ringkas)</div>
+            <pre>@Composable
+fun SplashScreen(onTimeout: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(2000)      // tampilkan logo 2 detik
+        onTimeout()
+    }
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
+        Box(contentAlignment = Alignment.Center) {
+            Image(painter = painterResource(R.drawable.movflix_logo), contentDescription = "MovFlix Logo")
+        }
+    }
+}</pre>
+            <div class="justified-text">
+                <strong>Penjelasan:</strong> <code>LaunchedEffect</code> menjalankan delay 2 detik untuk menampilkan logo, lalu memanggil <code>onTimeout()</code> yang memutuskan navigasi berikutnya (Login atau Main).
+            </div>
+        </div>
+
+        <!-- SECTION 6: ALUR EKSEKUSI APLIKASI -->
+        <div class="section" id="sec6">
+            <h2 class="section-title">6. Alur Eksekusi Aplikasi</h2>
+
+            <div class="justified-text">Berikut alur lengkap dari peluncuran hingga aplikasi siap digunakan:</div>
+
+            <div style="background-color: rgba(0, 0, 0, 0.2); padding: 15px; border-left: 3px solid #b8860b; border-radius: 3px; margin-bottom: 15px;">
+                <div class="justified-text"><strong>1. Aplikasi Diluncurkan:</strong> Android memanggil <code>MainActivity.onCreate()</code>.</div>
+                <div class="justified-text"><strong>2. Setup &amp; DI:</strong> <code>enableEdgeToEdge()</code> dijalankan, lalu <code>ServiceLocator</code> menyediakan MovieRepository dan AuthRepository (singleton).</div>
+                <div class="justified-text"><strong>3. UI Dipasang:</strong> <code>setContent</code> memasang <code>FinalProjectTheme</code> dan <code>AppNavigation</code>.</div>
+                <div class="justified-text"><strong>4. Splash Screen:</strong> Logo MovFlix ditampilkan selama 2 detik.</div>
+                <div class="justified-text"><strong>5. Pengecekan Session:</strong> Setelah delay, aplikasi memeriksa session. Jika sudah login &rarr; <strong>Main</strong>; jika belum &rarr; <strong>Login</strong>.</div>
+                <div class="justified-text"><strong>6. Autentikasi:</strong> Pengguna login, register, atau memilih guest. Saat berhasil, session disimpan dan navigasi menuju Main.</div>
+                <div class="justified-text"><strong>7. Main Screen:</strong> <code>HorizontalPager</code> + bottom navigation dirender, halaman Home tampil pertama.</div>
+                <div class="justified-text"><strong>8. Pemuatan Data:</strong> Setiap ViewModel memanggil Repository untuk mengambil data film dari TMDB API (atau watchlist dari Room), lalu meng-update <code>StateFlow</code>.</div>
+                <div class="justified-text"><strong>9. UI Recompose:</strong> Perubahan state otomatis memicu recompose sehingga daftar film tampil. Aplikasi siap untuk interaksi.</div>
+            </div>
+
+            <div class="screenshot-placeholder">[ Area Screenshot &mdash; splash screen &amp; halaman login ]</div>
+        </div>
+
+        <!-- SECTION 7: INTERAKSI USER DAN EVENT FLOW -->
+        <div class="section" id="sec7">
+            <h2 class="section-title">7. Interaksi User dan Event Flow</h2>
+
+            <div class="justified-text">
+                MovFlix menggunakan <em>event-driven architecture</em>: interaksi di UI memanggil callback yang terhubung ke method ViewModel, yang lalu memperbarui state dan/atau database. Berikut alur tiap interaksi utama (disertai panduan manual penggunaan).
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">Register / Login</div>
+                <div class="justified-text">
+                    <strong>Cara pakai:</strong> Pada layar Login, isi email &amp; password lalu tekan <strong>Masuk</strong>, atau tekan <strong>Daftar</strong> untuk membuat akun baru.<br>
+                    <strong>Flow:</strong> Input user &rarr; <code>AuthViewModel.login()/register()</code> &rarr; validasi &rarr; <code>AuthRepository</code> cek/simpan ke Room (password di-hash) &rarr; session disimpan &rarr; navigasi ke Main.
+                </div>
+                <div class="screenshot-placeholder">[ Area Screenshot &mdash; layar Login &amp; Register ]</div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">Masuk sebagai Guest</div>
+                <div class="justified-text">
+                    <strong>Cara pakai:</strong> Tekan <strong>Masuk sebagai Guest</strong> di layar Login.<br>
+                    <strong>Flow:</strong> <code>AuthViewModel.loginAsGuest()</code> &rarr; session guest disimpan &rarr; masuk ke Main. Tombol akun pada Home berubah menjadi <strong>Masuk</strong>.
+                </div>
+                <div class="screenshot-placeholder">[ Area Screenshot &mdash; mode Guest pada Home/Profile ]</div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">Menjelajah &amp; Mencari Film</div>
+                <div class="justified-text">
+                    <strong>Cara pakai:</strong> Geser antar tab atau scroll kategori di Home; buka tab <strong>Search</strong> dan ketik judul, pilih genre untuk memfilter.<br>
+                    <strong>Flow:</strong> ViewModel memanggil <code>MovieRepository</code> &rarr; Retrofit request ke TMDB &rarr; respons dipetakan ke domain model &rarr; <code>StateFlow</code> update &rarr; grid film recompose.
+                </div>
+                <div class="screenshot-placeholder">[ Area Screenshot &mdash; Home (kategori) &amp; Search (filter genre) ]</div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">Membuka Detail &amp; Menonton Trailer</div>
+                <div class="justified-text">
+                    <strong>Cara pakai:</strong> Tekan poster film untuk membuka detail, lalu tekan <strong>Watch Trailer</strong>.<br>
+                    <strong>Flow:</strong> <code>DetailViewModel</code> mengambil detail + daftar video dari TMDB &rarr; trailer (YouTube id) diputar full-screen di <code>YouTubeTrailerPlayer</code> (WebView iframe).
+                </div>
+                <div class="screenshot-placeholder">[ Area Screenshot &mdash; halaman Detail &amp; pemutar Trailer ]</div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">Menyimpan ke Watchlist</div>
+                <div class="justified-text">
+                    <strong>Cara pakai:</strong> Pada detail, tekan tombol <strong>Watchlist</strong> untuk menyimpan/menghapus.<br>
+                    <strong>Flow (user login):</strong> <code>DetailViewModel.toggleWatchlist()</code> &rarr; <code>MovieRepository.addToWatchlist()</code> menyimpan ke Room dengan <code>userId</code> aktif &rarr; ikon berubah menjadi <em>Saved</em>.<br>
+                    <strong>Flow (guest):</strong> Muncul <em>dialog</em> "Login diperlukan" dengan pilihan <strong>Login</strong> atau <strong>Batal</strong>.
+                </div>
+                <div class="screenshot-placeholder">[ Area Screenshot &mdash; tombol Watchlist &amp; dialog login untuk guest ]</div>
+            </div>
+
+            <div class="function-box">
+                <div class="function-name">Melihat Profile &amp; Logout</div>
+                <div class="justified-text">
+                    <strong>Cara pakai:</strong> Buka tab <strong>Profile</strong> untuk melihat nama, email, dan watchlist. Tekan ikon <strong>Logout</strong> untuk keluar.<br>
+                    <strong>Flow:</strong> <code>ProfileViewModel</code> membaca session &amp; watchlist (Room) milik user; Logout memanggil <code>AuthRepository.logout()</code> &rarr; session dihapus &rarr; kembali ke Login.
+                </div>
+                <div class="screenshot-placeholder">[ Area Screenshot &mdash; halaman Profile + watchlist ]</div>
+            </div>
+        </div>
+
+        <!-- SECTION 8: TEKNOLOGI DAN DEPENDENCIES -->
+        <div class="section" id="sec8">
+            <h2 class="section-title">8. Teknologi dan Dependencies</h2>
+
+            <div class="justified-text">MovFlix dibangun dengan berbagai library modern dari ekosistem Android:</div>
+
+            <div class="tech-table-container">
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Teknologi</th>
+                            <th>Versi</th>
+                            <th>Kegunaan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Jetpack Compose</strong></td><td>BOM 2024.09.00</td><td>UI declarative framework berbasis Kotlin</td></tr>
+                        <tr><td><strong>Material 3</strong></td><td>Latest</td><td>Design system &amp; komponen siap pakai (Scaffold, TopAppBar, dll)</td></tr>
+                        <tr><td><strong>Navigation Compose</strong></td><td>2.8.3</td><td>Navigasi antar layar (NavHost, routes)</td></tr>
+                        <tr><td><strong>HorizontalPager</strong></td><td>(Compose Foundation)</td><td>Navigasi swipe antar tab</td></tr>
+                        <tr><td><strong>Retrofit</strong></td><td>2.11.0</td><td>HTTP client untuk REST API TMDB</td></tr>
+                        <tr><td><strong>OkHttp</strong></td><td>4.12.0</td><td>Networking &amp; interceptor (Authorization header)</td></tr>
+                        <tr><td><strong>Gson</strong></td><td>(converter 2.11.0)</td><td>Parsing JSON respons API</td></tr>
+                        <tr><td><strong>Room</strong></td><td>2.6.1</td><td>Database lokal (watchlist &amp; akun)</td></tr>
+                        <tr><td><strong>KSP</strong></td><td>2.0.21-1.0.27</td><td>Annotation processor untuk Room</td></tr>
+                        <tr><td><strong>Coil</strong></td><td>2.7.0</td><td>Memuat gambar poster/backdrop</td></tr>
+                        <tr><td><strong>ViewModel + StateFlow</strong></td><td>Lifecycle 2.8.6</td><td>State management reaktif</td></tr>
+                        <tr><td><strong>Coroutines</strong></td><td>1.8.1</td><td>Pemrograman asynchronous</td></tr>
+                        <tr><td><strong>WebView</strong></td><td>(Android SDK)</td><td>Memutar trailer via YouTube iframe embed</td></tr>
+                        <tr><td><strong>SharedPreferences</strong></td><td>(Android SDK)</td><td>Menyimpan session login</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="justified-text">
+                <strong>Sumber data:</strong> seluruh informasi film berasal dari <span class="highlight">TMDB API</span> (<code>https://api.themoviedb.org/3/</code>). <strong>Min SDK 24</strong>, <strong>Target/Compile SDK 35</strong>, ditulis dalam <strong>Kotlin</strong>.
+            </div>
+        </div>
+
+        <!-- SECTION 9: KESIMPULAN -->
+        <div class="section" id="sec9">
+            <h2 class="section-title">9. Kesimpulan</h2>
+
+            <div class="justified-text">
+                MovFlix menunjukkan penerapan teknologi Android modern untuk membangun aplikasi katalog film yang lengkap dan rapi. Dengan arsitektur <strong>MVVM</strong>, <strong>Jetpack Compose</strong> untuk UI, <strong>Retrofit</strong> untuk konsumsi TMDB API, dan <strong>Room</strong> untuk penyimpanan lokal, aplikasi memiliki fondasi yang kuat dan mudah dikembangkan.
+            </div>
+            <div class="justified-text">
+                Fitur seperti autentikasi lokal, watchlist per-akun, pencarian dengan filter, pemutaran trailer, dan navigasi swipe membuat aplikasi terasa modern dan ramah pengguna. Pemisahan tanggung jawab antar layer yang jelas memastikan kode mudah dirawat, diuji, dan diperluas dengan fitur baru di masa depan.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

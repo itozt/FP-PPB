@@ -1,7 +1,6 @@
 package com.example.moviecatalogue.data.local
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.example.moviecatalogue.domain.Genre
@@ -10,13 +9,16 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 /**
- * Room entity for persisting watchlist movies locally.
- * Enables full offline access to saved movies.
+ * Room entity for persisting watchlist movies locally, scoped per account.
+ *
+ * The watchlist belongs to a specific [userId], so the same movie can be saved
+ * independently by different accounts — hence the composite primary key.
  */
-@Entity(tableName = "watchlist_movies")
+@Entity(tableName = "watchlist_movies", primaryKeys = ["id", "userId"])
 @TypeConverters(Converters::class)
 data class MovieEntity(
-    @PrimaryKey val id: Int,
+    val id: Int,
+    val userId: Int,
     val title: String,
     val overview: String,
     val posterPath: String?,
@@ -48,8 +50,9 @@ data class MovieEntity(
     )
 }
 
-fun Movie.toEntity(): MovieEntity = MovieEntity(
+fun Movie.toEntity(userId: Int): MovieEntity = MovieEntity(
     id = id,
+    userId = userId,
     title = title,
     overview = overview,
     posterPath = posterPath,

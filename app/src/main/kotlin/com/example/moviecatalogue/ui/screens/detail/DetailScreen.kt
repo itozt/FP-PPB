@@ -1,9 +1,5 @@
 package com.example.moviecatalogue.ui.screens.detail
 
-import android.view.ViewGroup
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -15,7 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.BookmarkBorder
@@ -33,9 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -45,6 +37,7 @@ import com.example.moviecatalogue.domain.Movie
 import com.example.moviecatalogue.domain.MovieDetail
 import com.example.moviecatalogue.domain.MovieRepository
 import com.example.moviecatalogue.ui.components.ShimmerBrush
+import com.example.moviecatalogue.ui.components.TrailerFullscreenPlayer
 
 /**
  * Detail Screen — full movie info with trailer playback and watchlist toggle.
@@ -60,13 +53,21 @@ import com.example.moviecatalogue.ui.components.ShimmerBrush
 fun DetailScreen(
     movieId: Int,
     repository: MovieRepository,
-    onBackClick: () -> Unit
+    isGuest: Boolean,
+    onBackClick: () -> Unit,
+    onRequestLogin: () -> Unit
 ) {
     val viewModel: DetailViewModel = viewModel(
         factory = DetailViewModel.Factory(movieId, repository)
     )
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    var showLoginDialog by remember { mutableStateOf(false) }
+
+    // Guests can't save a watchlist — prompt them to log in instead of toggling.
+    val onWatchlistToggle: () -> Unit = {
+        if (isGuest) showLoginDialog = true else viewModel.toggleWatchlist()
+    }
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { msg ->
@@ -75,17 +76,29 @@ fun DetailScreen(
         }
     }
 
-    // Trailer Dialog
-    if (uiState.showTrailerDialog) {
-        val key = uiState.movieDetail?.trailerKey
-        if (!key.isNullOrBlank()) {
-            TrailerDialog(videoKey = key, onDismiss = viewModel::dismissTrailer)
-        }
+    if (showLoginDialog) {
+        AlertDialog(
+            onDismissRequest = { showLoginDialog = false },
+            title = { Text("Login diperlukan") },
+            text = { Text("Masuk ke akunmu untuk menyimpan film ke watchlist.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showLoginDialog = false
+                    onRequestLogin()
+                }) { Text("Login") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLoginDialog = false }) { Text("Batal") }
+            }
+        )
     }
 
     Scaffold(
         snackbarHost    = { SnackbarHost(snackbarHostState) },
-        containerColor  = MaterialTheme.colorScheme.background
+        containerColor  = MaterialTheme.colorScheme.background,
+        // Let the backdrop run edge-to-edge under the status bar; the back/
+        // bookmark buttons already use statusBarsPadding() to stay reachable.
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
             when {
@@ -95,8 +108,8 @@ fun DetailScreen(
                     isInWatchlist      = uiState.isInWatchlist,
                     isWatchlistLoading = uiState.isWatchlistLoading,
                     onBackClick        = onBackClick,
-                    onWatchlistToggle  = viewModel::toggleWatchlist,
-                    onWatchTrailer     = viewModel::showTrailer,
+                    onWatchlistToggle  = onWatchlistToggle,
+                    onWatchTrailer     = viewModel::playTrailer,
                     modifier           = Modifier.padding(padding)
                 )
                 else -> ErrorDetail(
@@ -104,6 +117,14 @@ fun DetailScreen(
                     onBack   = onBackClick,
                     onRetry  = viewModel::retryLoad
                 )
+            }
+
+            // Full-screen trailer overlay (landscape), shown on demand.
+            if (uiState.isTrailerPlaying) {
+                val keys = uiState.movieDetail?.trailerCandidates.orEmpty()
+                if (keys.isNotEmpty()) {
+                    TrailerFullscreenPlayer(videoKeys = keys, onClose = viewModel::closeTrailer)
+                }
             }
         }
     }
@@ -122,18 +143,20 @@ private fun DetailContent(
     modifier: Modifier = Modifier
 ) {
     val movie = movieDetail.movie
+    val hasTrailer = !movieDetail.trailerKey.isNullOrBlank()
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .navigationBarsPadding()
     ) {
 
-        // ── Backdrop with overlaid nav buttons ────────────────────────────────
+        // ── Backdrop banner with overlaid controls ────────────────────────────
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp)
+                .height(260.dp)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -145,14 +168,15 @@ private fun DetailContent(
                 modifier = Modifier.fillMaxSize()
             )
 
+            // Scrim: darken edges for control legibility and blend into the page.
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
-                                0.0f to Color.Black.copy(alpha = 0.35f),
-                                0.55f to Color.Transparent,
+                                0.0f to Color.Black.copy(alpha = 0.45f),
+                                0.45f to Color.Black.copy(alpha = 0.10f),
                                 1.0f to MaterialTheme.colorScheme.background
                             )
                         )
@@ -169,33 +193,38 @@ private fun DetailContent(
                     .background(Color.Black.copy(alpha = 0.55f), CircleShape)
             ) {
                 Icon(
-                    imageVector    = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint           = Color.White
+                    tint               = Color.White
                 )
             }
 
             // Bookmark (top-right quick toggle)
-            IconButton(
-                onClick  = onWatchlistToggle,
-                enabled  = !isWatchlistLoading,
+            Box(
                 modifier = Modifier
                     .statusBarsPadding()
                     .padding(8.dp)
                     .align(Alignment.TopEnd)
-                    .background(Color.Black.copy(alpha = 0.55f), CircleShape)
             ) {
-                if (isWatchlistLoading) {
-                    CircularProgressIndicator(
-                        modifier    = Modifier.size(20.dp),
-                        color       = Color.White,
-                        strokeWidth = 2.dp
+                WatchlistIconButton(isInWatchlist, isWatchlistLoading, onWatchlistToggle)
+            }
+
+            // Center play button → opens the trailer in full-screen landscape.
+            if (hasTrailer) {
+                FilledIconButton(
+                    onClick  = onWatchTrailer,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(66.dp),
+                    colors   = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.92f),
+                        contentColor   = Color.White
                     )
-                } else {
+                ) {
                     Icon(
-                        imageVector    = if (isInWatchlist) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
-                        contentDescription = if (isInWatchlist) "Remove from watchlist" else "Add to watchlist",
-                        tint           = if (isInWatchlist) MaterialTheme.colorScheme.primary else Color.White
+                        Icons.Filled.PlayArrow,
+                        contentDescription = "Play trailer",
+                        modifier = Modifier.size(38.dp)
                     )
                 }
             }
@@ -287,8 +316,6 @@ private fun DetailContent(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val hasTrailer = movieDetail.trailerKey != null
-
             Button(
                 onClick  = onWatchTrailer,
                 enabled  = hasTrailer,
@@ -436,65 +463,32 @@ private fun InfoItem(label: String, value: String, modifier: Modifier = Modifier
     }
 }
 
-// ─── Trailer Dialog ───────────────────────────────────────────────────────────
+// ─── Watchlist Icon Button ──────────────────────────────────────────────────
 
+/** Circular bookmark toggle, reused on the backdrop and above the trailer. */
 @Composable
-fun TrailerDialog(videoKey: String, onDismiss: () -> Unit) {
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties       = DialogProperties(usePlatformDefaultWidth = false)
+private fun WatchlistIconButton(
+    isInWatchlist: Boolean,
+    isWatchlistLoading: Boolean,
+    onToggle: () -> Unit
+) {
+    IconButton(
+        onClick  = onToggle,
+        enabled  = !isWatchlistLoading,
+        modifier = Modifier.background(Color.Black.copy(alpha = 0.55f), CircleShape)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.95f)
-                .wrapContentHeight()
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.Black)
-        ) {
-            Column {
-                Row(
-                    modifier              = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment     = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text  = "Trailer",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White
-                    )
-                    IconButton(onClick = onDismiss) {
-                        Icon(
-                            imageVector    = Icons.Filled.Close,
-                            contentDescription = "Close trailer",
-                            tint           = Color.White
-                        )
-                    }
-                }
-
-                val context = LocalContext.current
-                AndroidView(
-                    factory = {
-                        WebView(context).apply {
-                            layoutParams = ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT
-                            )
-                            settings.javaScriptEnabled = true
-                            settings.domStorageEnabled = true
-                            settings.mediaPlaybackRequiresUserGesture = false
-                            webChromeClient = WebChromeClient()
-                            webViewClient = WebViewClient()
-                            loadUrl("https://www.youtube.com/embed/$videoKey?autoplay=1&playsinline=1")
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9f)
-                )
-                Spacer(Modifier.height(8.dp))
-            }
+        if (isWatchlistLoading) {
+            CircularProgressIndicator(
+                modifier    = Modifier.size(20.dp),
+                color       = Color.White,
+                strokeWidth = 2.dp
+            )
+        } else {
+            Icon(
+                imageVector        = if (isInWatchlist) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
+                contentDescription = if (isInWatchlist) "Remove from watchlist" else "Add to watchlist",
+                tint               = if (isInWatchlist) MaterialTheme.colorScheme.primary else Color.White
+            )
         }
     }
 }
