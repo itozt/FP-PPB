@@ -1,23 +1,35 @@
-package com.example.moviecatalogue.ui.screens.watchlist
+package com.example.moviecatalogue.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.moviecatalogue.domain.AuthRepository
 import com.example.moviecatalogue.domain.Movie
 import com.example.moviecatalogue.domain.MovieRepository
-import kotlinx.coroutines.flow.*
+import com.example.moviecatalogue.domain.UserSession
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class WatchlistUiState(
+data class ProfileUiState(
+    val session: UserSession? = null,
     val movies: List<Movie> = emptyList(),
     val isLoading: Boolean = true,
     val recentlyDeletedMovie: Movie? = null
-)
+) {
+    val isGuest: Boolean get() = session?.isGuest != false
+}
 
-class WatchlistViewModel(private val repository: MovieRepository) : ViewModel() {
+class ProfileViewModel(
+    private val repository: MovieRepository,
+    authRepository: AuthRepository
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(WatchlistUiState())
-    val uiState: StateFlow<WatchlistUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ProfileUiState(session = authRepository.session.value))
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     init {
         observeWatchlist()
@@ -35,7 +47,6 @@ class WatchlistViewModel(private val repository: MovieRepository) : ViewModel() 
 
     fun removeMovie(movie: Movie) {
         viewModelScope.launch {
-            // Save for potential undo (HCI: error recovery via snackbar undo)
             _uiState.update { it.copy(recentlyDeletedMovie = movie) }
             repository.removeFromWatchlist(movie.id)
         }
@@ -53,9 +64,12 @@ class WatchlistViewModel(private val repository: MovieRepository) : ViewModel() 
         _uiState.update { it.copy(recentlyDeletedMovie = null) }
     }
 
-    class Factory(private val repository: MovieRepository) : ViewModelProvider.Factory {
+    class Factory(
+        private val repository: MovieRepository,
+        private val authRepository: AuthRepository
+    ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            WatchlistViewModel(repository) as T
+            ProfileViewModel(repository, authRepository) as T
     }
 }

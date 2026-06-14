@@ -2,9 +2,12 @@ package com.example.moviecatalogue.di
 
 import android.content.Context
 import com.example.moviecatalogue.BuildConfig
+import com.example.moviecatalogue.data.auth.SessionManager
 import com.example.moviecatalogue.data.local.MovieDatabase
 import com.example.moviecatalogue.data.remote.ApiService
+import com.example.moviecatalogue.data.repository.AuthRepositoryImpl
 import com.example.moviecatalogue.data.repository.MovieRepositoryImpl
+import com.example.moviecatalogue.domain.AuthRepository
 import com.example.moviecatalogue.domain.MovieRepository
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -26,10 +29,27 @@ object ServiceLocator {
     @Volatile
     private var repository: MovieRepository? = null
 
+    @Volatile
+    private var authRepository: AuthRepository? = null
+
     fun provideRepository(context: Context): MovieRepository {
         return repository ?: synchronized(this) {
             repository ?: buildRepository(context).also { repository = it }
         }
+    }
+
+    fun provideAuthRepository(context: Context): AuthRepository {
+        return authRepository ?: synchronized(this) {
+            authRepository ?: buildAuthRepository(context).also { authRepository = it }
+        }
+    }
+
+    private fun buildAuthRepository(context: Context): AuthRepository {
+        val database = MovieDatabase.getInstance(context)
+        return AuthRepositoryImpl(
+            userDao = database.userDao(),
+            sessionManager = SessionManager(context)
+        )
     }
 
     private fun buildRepository(context: Context): MovieRepository {
@@ -37,7 +57,8 @@ object ServiceLocator {
         val database = MovieDatabase.getInstance(context)
         return MovieRepositoryImpl(
             apiService = apiService,
-            movieDao = database.movieDao()
+            movieDao = database.movieDao(),
+            authRepository = provideAuthRepository(context)
         )
     }
 

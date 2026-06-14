@@ -58,8 +58,13 @@ fun FinalProjectTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
+            // Transparent system bars so the dark app shows through edge-to-edge.
             window.statusBarColor = Color.Transparent.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+            window.navigationBarColor = Color.Transparent.toArgb()
+            // Light (white) icons on both bars, since the app is dark-themed.
+            val controller = WindowCompat.getInsetsController(window, view)
+            controller.isAppearanceLightStatusBars = false
+            controller.isAppearanceLightNavigationBars = false
         }
     }
 

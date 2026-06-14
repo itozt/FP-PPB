@@ -3,12 +3,15 @@ package com.example.moviecatalogue.data.repository
 import com.example.moviecatalogue.data.local.MovieDao
 import com.example.moviecatalogue.data.local.toEntity
 import com.example.moviecatalogue.data.remote.ApiService
+import com.example.moviecatalogue.domain.AuthRepository
 import com.example.moviecatalogue.domain.Genre
 import com.example.moviecatalogue.domain.Movie
 import com.example.moviecatalogue.domain.MovieDetail
 import com.example.moviecatalogue.domain.MovieRepository
 import com.example.moviecatalogue.domain.MovieVideo
+import com.example.moviecatalogue.domain.UserSession
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 /**
@@ -18,8 +21,16 @@ import kotlinx.coroutines.flow.map
  */
 class MovieRepositoryImpl(
     private val apiService: ApiService,
-    private val movieDao: MovieDao
+    private val movieDao: MovieDao,
+    private val authRepository: AuthRepository
 ) : MovieRepository {
+
+    /** The id of the signed-in account; GUEST_ID when browsing as a guest. */
+    private val currentUserId: Int
+        get() = authRepository.session.value?.userId ?: UserSession.GUEST_ID
+
+    private val isGuest: Boolean
+        get() = currentUserId == UserSession.GUEST_ID
 
     // ─── Remote Operations ─────────────────────────────────────────────────────
 
@@ -69,24 +80,28 @@ class MovieRepositoryImpl(
 
     // ─── Local (Room) Operations ───────────────────────────────────────────────
 
-    override fun getWatchlist(): Flow<List<Movie>> =
-        movieDao.getAllWatchlistMovies().map { entities ->
+    override fun getWatchlist(): Flow<List<Movie>> {
+        if (isGuest) return flowOf(emptyList())
+        return movieDao.getAllWatchlistMovies(currentUserId).map { entities ->
             entities.map { it.toDomain() }
         }
+    }
 
     override suspend fun addToWatchlist(movie: Movie) {
-        movieDao.insertMovie(movie.toEntity())
+        if (isGuest) return  // guests cannot persist a watchlist
+        movieDao.insertMovie(movie.toEntity(currentUserId))
     }
 
     override suspend fun removeFromWatchlist(movieId: Int) {
-        movieDao.deleteMovieById(movieId)
+        if (isGuest) return
+        movieDao.deleteMovieById(movieId, currentUserId)
     }
 
     override suspend fun isInWatchlist(movieId: Int): Boolean =
-        movieDao.isInWatchlist(movieId)
+        !isGuest && movieDao.isInWatchlist(movieId, currentUserId)
 
     override fun isInWatchlistFlow(movieId: Int): Flow<Boolean> =
-        movieDao.isInWatchlistFlow(movieId)
+        if (isGuest) flowOf(false) else movieDao.isInWatchlistFlow(movieId, currentUserId)
 
     // ─── Helper ────────────────────────────────────────────────────────────────
 

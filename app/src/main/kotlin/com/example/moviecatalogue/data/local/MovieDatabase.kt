@@ -11,14 +11,16 @@ import androidx.room.TypeConverters
  * Holds the watchlist_movies table for offline-first capability.
  */
 @Database(
-    entities = [MovieEntity::class],
-    version = 1,
+    entities = [MovieEntity::class, UserEntity::class],
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class MovieDatabase : RoomDatabase() {
 
     abstract fun movieDao(): MovieDao
+
+    abstract fun userDao(): UserDao
 
     companion object {
         private const val DATABASE_NAME = "movflix_db"

@@ -53,28 +53,30 @@ data class MovieDetail(
     val tagline: String = "",
     val status: String = ""
 ) {
+    /**
+     * The single YouTube trailer to play — chosen to match what themoviedb.org
+     * shows. TMDB's API returns videos newest-first, so we take the first
+     * official "Trailer", falling back to any "Trailer" only if none are
+     * marked official. We intentionally do NOT fall through to teasers or
+     * featurettes, so the app plays the *same* clip as TMDB instead of
+     * silently substituting a different video.
+     */
     val trailerKey: String?
-        get() = videos.firstOrNull {
-            it.isValidYouTubeTrailer()
-        }?.key
-            ?: videos.firstOrNull {
-                it.isValidYouTubeVideo()
-            }?.key
+        get() {
+            val trailers = videos.filter {
+                it.site.equals("YouTube", ignoreCase = true) &&
+                    it.type.equals("Trailer", ignoreCase = true) &&
+                    it.key.isValidYouTubeVideoId()
+            }
+            return (trailers.firstOrNull { it.official } ?: trailers.firstOrNull())?.key
+        }
+
+    /** Single-element list (or empty) kept for the player's existing API. */
+    val trailerCandidates: List<String>
+        get() = listOfNotNull(trailerKey)
 
     val formattedRuntime: String
         get() = if (runtime > 0) "${runtime / 60}h ${runtime % 60}m" else "N/A"
-
-    private fun MovieVideo.isValidYouTubeTrailer(): Boolean {
-        return site.equals("YouTube", ignoreCase = true) &&
-            type.equals("Trailer", ignoreCase = true) &&
-            official &&
-            key.isValidYouTubeVideoId()
-    }
-
-    private fun MovieVideo.isValidYouTubeVideo(): Boolean {
-        return site.equals("YouTube", ignoreCase = true) &&
-            key.isValidYouTubeVideoId()
-    }
 
     private fun String.isValidYouTubeVideoId(): Boolean {
         return isNotBlank() && matches(Regex("^[A-Za-z0-9_-]{11}$"))

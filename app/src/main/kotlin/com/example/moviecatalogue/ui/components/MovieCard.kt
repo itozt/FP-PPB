@@ -97,6 +97,7 @@ fun MovieCard(
             Text(
                 text     = movie.title,
                 style    = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                minLines = 2,   // always reserve 2 lines so cards stay equal height
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 color    = MaterialTheme.colorScheme.onSurface

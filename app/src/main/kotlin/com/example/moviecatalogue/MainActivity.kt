@@ -25,11 +25,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val repository = ServiceLocator.provideRepository(applicationContext)
+        val authRepository = ServiceLocator.provideAuthRepository(applicationContext)
 
         setContent {
             FinalProjectTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AppNavigation(repository = repository)
+                    AppNavigation(
+                        repository = repository,
+                        authRepository = authRepository
+                    )
                 }
             }
         }
