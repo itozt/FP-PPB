@@ -16,3 +16,18 @@ local.properties
 /build
 .invalidate/
 .clean/
+
+# Build outputs (per-module)
+app/build/
+*/build/
+app/release/
+
+# Sensitive / local-only files
+key
+*.keystore
+*.jks
+
+# Logs & tooling
+*.log
+install_log.txt
+.claude/
