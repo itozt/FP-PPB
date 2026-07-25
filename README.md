@@ -59,12 +59,10 @@ Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsi
 - **Minimum SDK:** Android 7.0 (API 24)
 
 ## 📋 Changelog / Catatan Rilis
-### v1.0.0 (Rilis Publik)
-- Penjelajahan film berdasarkan kategori: Trending, Now Playing, Popular, dan Top Rated.
-- *Hero slider* otomatis dengan *infinite scroll* di halaman Home.
-- Pencarian film *debounced* dengan filter genre.
-- Halaman detail film lengkap dengan pemutaran trailer YouTube *full-screen*.
-- Autentikasi lokal: register, login email & password, serta mode Guest.
-- Watchlist per-akun yang tersimpan secara offline.
-- Halaman Profile menampilkan nama, email, dan daftar watchlist.
-- Navigasi *swipe* antar tab, *collapsing top bar*, dan tema gelap Material 3.
+### v1.0.0 (Rilis Perdana)
+- **Eksplorasi Film Mudah:** Temukan berbagai film terbaru, terpopuler, dan rating tertinggi langsung dari beranda.
+- **Pencarian Cerdas:** Cari judul film favorit Anda dengan mudah dan saring berdasarkan kategori (genre).
+- **Tonton Langsung:** Nikmati pemutaran tayangan atau cuplikan film secara penuh langsung dari dalam aplikasi.
+- **Akun Pribadi:** Daftar dan masuk ke akun Anda untuk menyimpan film-film favorit ke daftar tontonan (Watchlist).
+- **Mode Tamu:** Tetap bisa mencari dan melihat-lihat film meskipun belum mendaftar akun.
+- **Pembaruan Tampilan:** Antarmuka (UI) yang nyaman digunakan dengan navigasi halus dan tema gelap yang ramah di mata.
