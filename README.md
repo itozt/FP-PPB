@@ -13,24 +13,27 @@
 > Aplikasi katalog film modern untuk menjelajah, mencari, dan menonton trailer film terbaru, dibangun sepenuhnya menggunakan teknologi Jetpack Compose dengan data real-time dari TMDB.
 
 ## 📖 Tentang
-**MovFlix** adalah aplikasi *movie catalogue* yang menampilkan daftar film populer, detail film, serta pemutaran *trailer* langsung di dalam aplikasi. Seluruh data film diambil secara *real-time* dari **TMDB (The Movie Database) API**. Aplikasi ini menghadirkan navigasi yang responsif berbasis gestur *swipe*, dilengkapi sistem **autentikasi lokal** (login, register, dan guest) serta **watchlist** yang tersimpan terpisah untuk setiap akun secara *offline* di perangkat. Dikembangkan sebagai pemenuhan evaluasi Final Project mata kuliah Pemrograman Perangkat Bergerak.
+
+**MovFlix** adalah aplikasi _movie catalogue_ yang menampilkan daftar film populer, detail film, serta pemutaran _trailer_ langsung di dalam aplikasi. Seluruh data film diambil secara _real-time_ dari **TMDB (The Movie Database) API**. Aplikasi ini menghadirkan navigasi yang responsif berbasis gestur _swipe_, dilengkapi sistem **autentikasi lokal** (login, register, dan guest) serta **watchlist** yang tersimpan terpisah untuk setiap akun secara _offline_ di perangkat. Dikembangkan sebagai pemenuhan evaluasi Final Project mata kuliah Pemrograman Perangkat Bergerak.
 
 ## ✨ Fitur Utama
-- **Autentikasi Lokal:** Register dan login dengan email & password, atau **Masuk sebagai Guest** tanpa akun. Password diamankan dengan *hashing* **SHA-256 + salt** dan disimpan secara lokal melalui Room.
-- **Navigasi Cepat Berbasis Swipe:** Transisi mulus antara layar **Home**, **Search**, dan **Profile** menggunakan HorizontalPager yang tersinkron dengan *bottom navigation*.
-- **Beranda Dinamis:** *Hero slider* film *trending* yang bergeser otomatis dan tak terbatas (*infinite loop*), diikuti baris kategori **Now Playing**, **Popular**, dan **Top Rated**.
-- **Pencarian Cerdas:** Pencarian film secara *debounced* (tanpa tombol submit) lengkap dengan filter **genre**.
-- **Detail & Trailer:** Halaman detail film menampilkan sinopsis, rating, durasi, dan genre, serta pemutaran **trailer YouTube** *full-screen* langsung di dalam aplikasi.
-- **Watchlist Per-Akun:** Simpan film favorit ke watchlist yang terikat pada akun masing-masing. Akun *guest* diarahkan untuk login terlebih dahulu sebelum menyimpan.
-- **Estetika Material Design 3:** Tema gelap sinematik, *collapsing top bar* saat *scroll*, *shimmer skeleton* saat memuat, dan *Splash Screen* berlogo.
+
+- **Autentikasi Lokal:** Register dan login dengan email & password, atau **Masuk sebagai Guest** tanpa akun. Password diamankan dengan _hashing_ **SHA-256 + salt** dan disimpan secara lokal melalui Room.
+- **Navigasi Cepat Berbasis Swipe:** Transisi mulus antara layar **Home**, **Search**, dan **Profile** menggunakan HorizontalPager yang tersinkron dengan _bottom navigation_.
+- **Beranda Dinamis:** _Hero slider_ film _trending_ yang bergeser otomatis dan tak terbatas (_infinite loop_), diikuti baris kategori **Now Playing**, **Popular**, dan **Top Rated**.
+- **Pencarian Cerdas:** Pencarian film secara _debounced_ (tanpa tombol submit) lengkap dengan filter **genre**.
+- **Detail & Trailer:** Halaman detail film menampilkan sinopsis, rating, durasi, dan genre, serta pemutaran **trailer YouTube** _full-screen_ langsung di dalam aplikasi.
+- **Watchlist Per-Akun:** Simpan film favorit ke watchlist yang terikat pada akun masing-masing. Akun _guest_ diarahkan untuk login terlebih dahulu sebelum menyimpan.
+- **Estetika Material Design 3:** Tema gelap sinematik, _collapsing top bar_ saat _scroll_, _shimmer skeleton_ saat memuat, dan _Splash Screen_ berlogo.
 
 ## 📱 Screenshot Terkini
-| Home | Search | Detail | Profile |
-| :---: | :---: | :---: | :---: |
+
+|                                                                      Home                                                                       |                                                                  Search                                                                   |                                                                  Detail                                                                   |                                                                    Profile                                                                    |
+| :---------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
 | <img width="738" height="1600" alt="dashboard - login" src="https://github.com/user-attachments/assets/c00b27be-49e5-4b90-9c4e-af9a4588c4fa" /> | <img width="738" height="1600" alt="search page" src="https://github.com/user-attachments/assets/bcd1f62e-4f70-41ea-9911-70a0a837e1dc" /> | <img width="683" height="1600" alt="detail film" src="https://github.com/user-attachments/assets/98f04475-df2e-4902-87d1-c38f92b1e6d2" /> | <img width="738" height="1600" alt="profile - login" src="https://github.com/user-attachments/assets/8c788ce7-2146-4d33-9f49-4414e983ce0a" /> |
 
-
 ## 📥 Download APK
+
 Anda dapat melihat seluruh versi aplikasi yang pernah dirilis melalui halaman **GitHub Releases**, sekaligus mengunduh versi terbaru dengan mudah.
 
 🔗 **[Lihat Semua Versi Rilis](https://github.com/itozt/FP-PPB/releases)**
@@ -40,6 +43,7 @@ Untuk mengunduh **APK stabil terbaru**, silakan klik tombol di bawah ini:
 ⬇️ **[Download APK Terbaru](#download-badge)**
 
 ## ⚙️ Petunjuk Instalasi
+
 1. Unduh berkas APK dari tautan di atas.
 2. Buka paket installer yang terunduh pada perangkat Android Anda.
 3. Apabila muncul peringatan keamanan, izinkan pemasangan dari **Sumber Tidak Dikenal (Unknown Sources)** pada pengaturan keamanan ponsel.
@@ -48,28 +52,33 @@ Untuk mengunduh **APK stabil terbaru**, silakan klik tombol di bawah ini:
 > **Catatan:** Aplikasi memerlukan koneksi internet untuk mengambil data film dari TMDB. Pemutaran trailer paling optimal pada perangkat dengan layanan Google.
 
 ## 🛠️ Stack Teknologi & Arsitektur
-Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsip *Single Source of Truth* pada lapisan Repository:
+
+Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsip _Single Source of Truth_ pada lapisan Repository:
+
 - **Bahasa:** Kotlin
 - **UI & Layouting:** Jetpack Compose (Material 3)
 - **Reactivity & Threading:** Kotlin Coroutines beserta StateFlow
 - **Networking:** Retrofit + OkHttp + Gson (sumber data **TMDB API**)
-- **Lapisan Penyimpanan:** Room Database (SQLite) untuk watchlist & akun, serta SharedPreferences untuk *session*
-- **Lainnya:** Coil (image loading), Navigation Compose, WebView (YouTube *iframe embed*)
+- **Lapisan Penyimpanan:** Room Database (SQLite) untuk watchlist & akun, serta SharedPreferences untuk _session_
+- **Lainnya:** Coil (image loading), Navigation Compose, WebView (YouTube _iframe embed_)
 - **Minimum SDK:** Android 7.0 (API 24)
 
 ## 📋 Changelog / Catatan Rilis
-### v1.1.0
+
+### v1.1.0 (Latest)
+
 - Pembaruan antarmuka (UI) dan tata letak untuk pengalaman pengguna yang lebih rapi dan nyaman.
 - Pencarian kini lebih pintar: otomatis menghapus filter saat kolom pencarian dikosongkan.
 - Menyaring hasil pencarian agar hanya menampilkan film dengan data dan gambar yang valid.
-- Memperbaiki animasi geser otomatis pada *banner* halaman utama.
+- Memperbaiki animasi geser otomatis pada _banner_ halaman utama.
 
-### v1.0.0 (Rilis Publik)
+### v1.0.0
+
 - Penjelajahan film berdasarkan kategori: Trending, Now Playing, Popular, dan Top Rated.
-- *Hero slider* otomatis dengan *infinite scroll* di halaman Home.
-- Pencarian film *debounced* dengan filter genre.
-- Halaman detail film lengkap dengan pemutaran trailer YouTube *full-screen*.
+- _Hero slider_ otomatis dengan _infinite scroll_ di halaman Home.
+- Pencarian film _debounced_ dengan filter genre.
+- Halaman detail film lengkap dengan pemutaran trailer YouTube _full-screen_.
 - Autentikasi lokal: register, login email & password, serta mode Guest.
 - Watchlist per-akun yang tersimpan secara offline.
 - Halaman Profile menampilkan nama, email, dan daftar watchlist.
-- Navigasi *swipe* antar tab, *collapsing top bar*, dan tema gelap Material 3.
+- Navigasi _swipe_ antar tab, _collapsing top bar_, dan tema gelap Material 3.
