@@ -11,12 +11,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 // ─── MovFlix Dark Mode Palette ──────────────────────────────────────────────
-val CineRed = Color(0xFFFF5252)         // Vibrant red for dark mode
-val CineRedDark = Color(0xFFE50914)     // Deep red for containers
+val CineRed = Color(0xFFE50914)         // Vibrant red for dark mode
+val CineRedDark = Color(0xFFB81D24)     // Deep red for containers
 val CineGold = Color(0xFFFFC107)        // Bright gold for accents
-val CineDarkBg = Color(0xFF0A0A0A)      // Near-black background (WCAG AA compliant)
-val CineSurface = Color(0xFF121212)     // Surface layer (Material Design recommendation)
-val CineSurfaceVariant = Color(0xFF1E1E1E)  // Elevated surface
+val CineDarkBg = Color.Transparent      // Transparent to allow LiquidBackground to show
+val CineSurface = Color(0x1AFFFFFF)     // 10% white for glass surfaces
+val CineSurfaceVariant = Color(0x26FFFFFF)  // 15% white for elevated glass
 val CineOnSurface = Color(0xFFFFFFFF)   // Primary text - pure white for max contrast
 val CineSecondary = Color(0xFFBDBDBD)   // Secondary text - improved readability
 val CineTertiary = Color(0xFF64B5F6)    // Tertiary accent - light blue

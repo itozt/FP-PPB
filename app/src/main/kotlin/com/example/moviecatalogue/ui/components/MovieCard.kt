@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -22,8 +23,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.moviecatalogue.domain.MediaType
 import com.example.moviecatalogue.domain.Movie
 
 // ─── Standard Movie Card (Home / Search) ─────────────────────────────────────
@@ -42,10 +45,11 @@ fun MovieCard(
     Card(
         modifier  = modifier
             .width(130.dp)
+            .glassMorphism(cornerRadius = 16.dp)
             .clickable(onClick = onClick),
-        shape     = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        shape     = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        colors    = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Box {
             AsyncImage(
@@ -53,7 +57,7 @@ fun MovieCard(
                     .data(movie.posterUrl)
                     .crossfade(true)
                     .build(),
-                contentDescription = movie.title,
+                contentDescription = movie.displayTitle,
                 contentScale       = ContentScale.Crop,
                 modifier           = Modifier
                     .fillMaxWidth()
@@ -90,12 +94,35 @@ fun MovieCard(
                     }
                 }
             }
+
+            // Media type badge — top-left overlay (TV only)
+            if (movie.isTvSeries) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(6.dp)
+                        .background(
+                            color  = MaterialTheme.colorScheme.primary,
+                            shape  = RoundedCornerShape(4.dp)
+                        )
+                        .padding(horizontal = 4.dp, vertical = 1.dp)
+                ) {
+                    Text(
+                        text  = "TV",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 8.sp
+                        ),
+                        color = Color.White
+                    )
+                }
+            }
         }
 
         // Title + year below poster
-        Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
             Text(
-                text     = movie.title,
+                text     = movie.displayTitle,
                 style    = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                 minLines = 2,   // always reserve 2 lines so cards stay equal height
                 maxLines = 2,
@@ -131,10 +158,11 @@ fun WatchlistMovieCard(
     Card(
         modifier  = modifier
             .fillMaxWidth()
+            .glassMorphism(cornerRadius = 24.dp)
             .clickable(onClick = onClick),
-        shape     = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        shape     = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        colors    = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Box {
             AsyncImage(
@@ -142,7 +170,7 @@ fun WatchlistMovieCard(
                     .data(movie.posterUrl)
                     .crossfade(true)
                     .build(),
-                contentDescription = movie.title,
+                contentDescription = movie.displayTitle,
                 contentScale       = ContentScale.Crop,
                 modifier           = Modifier
                     .fillMaxWidth()
@@ -186,7 +214,7 @@ fun WatchlistMovieCard(
                     .padding(8.dp)
             ) {
                 Text(
-                    text     = movie.title,
+                    text     = movie.displayTitle,
                     style    = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -221,17 +249,20 @@ fun WatchlistMovieCard(
 @Composable
 fun ShimmerBrush(showShimmer: Boolean = true, targetValue: Float = 1000f): Brush {
     return if (showShimmer) {
+        val baseColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        val highlightColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
+        
         val shimmerColors = listOf(
-            Color.LightGray.copy(alpha = 0.6f),
-            Color.LightGray.copy(alpha = 0.2f),
-            Color.LightGray.copy(alpha = 0.6f)
+            baseColor,
+            highlightColor,
+            baseColor
         )
         val transition = rememberInfiniteTransition(label = "shimmer")
         val translateAnim by transition.animateFloat(
             initialValue = 0f,
             targetValue  = targetValue,
             animationSpec = infiniteRepeatable(
-                animation  = tween(durationMillis = 800, easing = LinearEasing),
+                animation  = tween(durationMillis = 1200, easing = LinearEasing),
                 repeatMode = RepeatMode.Restart
             ),
             label = "shimmer_translate"
@@ -292,11 +323,109 @@ fun ShimmerCategorySection(modifier: Modifier = Modifier) {
                 .background(shimmer)
         )
         Spacer(Modifier.height(10.dp))
+        // Content section
         Row(
-            modifier              = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             repeat(4) { ShimmerMovieCard() }
+        }
+    }
+}
+
+// ─── Continue Watching Card ──────────────────────────────────────────────────
+
+@Composable
+fun ContinueWatchingCard(
+    progress: com.example.moviecatalogue.domain.WatchProgress,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier  = modifier
+            .fillMaxWidth()
+            .glassMorphism(cornerRadius = 24.dp)
+            .clickable(onClick = onClick),
+        shape     = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        colors    = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
+        Column {
+            Box {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(progress.posterUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = progress.title,
+                    contentScale       = ContentScale.Crop,
+                    modifier           = Modifier
+                        .fillMaxWidth()
+                        .height(112.dp) // 16:9 aspect ratio approx
+                )
+                
+                // Play overlay
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.PlayArrow,
+                        contentDescription = "Play",
+                        tint = Color.White,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+                
+                // Media Type / Episode Info
+                val infoText = if (progress.mediaType == MediaType.TV) {
+                    "S${progress.season ?: 1} E${progress.episode ?: 1}"
+                } else "Movie"
+                
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(6.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = infoText,
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+
+            LinearProgressIndicator(
+                progress = { progress.progress.toFloat() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(3.dp),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+
+            Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+                Text(
+                    text = progress.title,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                val remainingMins = ((progress.duration - progress.currentTime) / 60).toInt()
+                Text(
+                    text = if (remainingMins > 0) "$remainingMins min left" else "Almost done",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

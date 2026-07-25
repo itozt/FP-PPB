@@ -8,10 +8,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -23,10 +25,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviecatalogue.domain.Movie
 import com.example.moviecatalogue.domain.MovieRepository
+import com.example.moviecatalogue.domain.WatchProgress
+import com.example.moviecatalogue.ui.components.ContinueWatchingCard
 import com.example.moviecatalogue.ui.components.MovieCard
 import com.example.moviecatalogue.ui.components.MovieSlider
 import com.example.moviecatalogue.ui.components.ShimmerCategorySection
 import com.example.moviecatalogue.ui.components.ShimmerSliderCard
+import com.example.moviecatalogue.ui.components.glassMorphism
 
 /**
  * Home Screen — Netflix-style with auto-sliding hero banner + categorised rows.
@@ -41,7 +46,7 @@ import com.example.moviecatalogue.ui.components.ShimmerSliderCard
 @Composable
 fun HomeScreen(
     repository: MovieRepository,
-    onMovieClick: (Int) -> Unit,
+    onMovieClick: (Int, String) -> Unit,
     isGuest: Boolean = false,
     onAccountAction: () -> Unit = {}
 ) {
@@ -66,7 +71,7 @@ fun HomeScreen(
         modifier       = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar         = { HomeTopBar(scrollBehavior, isGuest, onAccountAction) },
         snackbarHost   = { SnackbarHost(snackbarHostState) },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         if (uiState.isLoading) {
@@ -84,14 +89,15 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: HomeUiState,
-    onMovieClick: (Int) -> Unit,
+    onMovieClick: (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier            = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(0.dp)
+        verticalArrangement = Arrangement.spacedBy(0.dp),
+        contentPadding      = PaddingValues(bottom = 100.dp)
     ) {
-        // Hero slider (trending)
+        // Hero slider (trending — now includes both movies and TV)
         if (uiState.trendingMovies.isNotEmpty()) {
             item {
                 MovieSlider(
@@ -103,10 +109,22 @@ private fun HomeContent(
             }
         }
 
+        if (uiState.continueWatching.isNotEmpty()) {
+            item {
+                ContinueWatchingRow(
+                    title = "Lanjutkan Tontonan",
+                    icon = Icons.Rounded.PlayCircle,
+                    progressList = uiState.continueWatching,
+                    onMovieClick = onMovieClick
+                )
+            }
+        }
+
         if (uiState.nowPlayingMovies.isNotEmpty()) {
             item {
                 MovieCategoryRow(
-                    title        = "🎬  Now Playing",
+                    title        = "Now Playing",
+                    icon         = Icons.Rounded.Movie,
                     movies       = uiState.nowPlayingMovies,
                     onMovieClick = onMovieClick
                 )
@@ -116,8 +134,20 @@ private fun HomeContent(
         if (uiState.popularMovies.isNotEmpty()) {
             item {
                 MovieCategoryRow(
-                    title        = "🔥  Popular",
+                    title        = "Popular Movies",
+                    icon         = Icons.Rounded.LocalFireDepartment,
                     movies       = uiState.popularMovies,
+                    onMovieClick = onMovieClick
+                )
+            }
+        }
+
+        if (uiState.popularTvShows.isNotEmpty()) {
+            item {
+                MovieCategoryRow(
+                    title        = "Popular TV Series",
+                    icon         = Icons.Rounded.Tv,
+                    movies       = uiState.popularTvShows,
                     onMovieClick = onMovieClick
                 )
             }
@@ -126,8 +156,20 @@ private fun HomeContent(
         if (uiState.topRatedMovies.isNotEmpty()) {
             item {
                 MovieCategoryRow(
-                    title        = "⭐  Top Rated",
+                    title        = "Top Rated Movies",
+                    icon         = Icons.Rounded.Star,
                     movies       = uiState.topRatedMovies,
+                    onMovieClick = onMovieClick
+                )
+            }
+        }
+
+        if (uiState.topRatedTvShows.isNotEmpty()) {
+            item {
+                MovieCategoryRow(
+                    title        = "Top Rated TV Series",
+                    icon         = Icons.Rounded.Star,
+                    movies       = uiState.topRatedTvShows,
                     onMovieClick = onMovieClick
                 )
             }
@@ -176,8 +218,8 @@ private fun HomeTopBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor         = MaterialTheme.colorScheme.background,
-            scrolledContainerColor = MaterialTheme.colorScheme.background,
+            containerColor         = Color.Transparent,
+            scrolledContainerColor = Color.Black,
             titleContentColor      = MaterialTheme.colorScheme.primary
         )
     )
@@ -186,24 +228,80 @@ private fun HomeTopBar(
 @Composable
 fun MovieCategoryRow(
     title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
     movies: List<Movie>,
-    onMovieClick: (Int) -> Unit,
+    onMovieClick: (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(bottom = 20.dp)) {
-        Text(
-            text     = title,
-            style    = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color    = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-        )
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text     = title,
+                style    = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color    = MaterialTheme.colorScheme.onBackground
+            )
+        }
         Spacer(Modifier.height(8.dp))
         LazyRow(
             contentPadding        = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(items = movies, key = { it.id }) { movie ->
-                MovieCard(movie = movie, onClick = { onMovieClick(movie.id) })
+                MovieCard(
+                    movie = movie,
+                    onClick = { onMovieClick(movie.id, movie.mediaType.value) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ContinueWatchingRow(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    progressList: List<WatchProgress>,
+    onMovieClick: (Int, String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.padding(bottom = 20.dp)) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text     = title,
+                style    = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color    = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        LazyRow(
+            contentPadding        = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(items = progressList, key = { "${it.contentId}_${it.mediaType.value}" }) { progress ->
+                ContinueWatchingCard(
+                    progress = progress,
+                    onClick = { onMovieClick(progress.contentId, progress.mediaType.value) }
+                )
             }
         }
     }

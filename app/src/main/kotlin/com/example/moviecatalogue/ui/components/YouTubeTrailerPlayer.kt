@@ -109,17 +109,6 @@ fun TrailerFullscreenPlayer(
                 color = Color.White
             )
         }
-
-        IconButton(
-            onClick = onClose,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(12.dp)
-                .size(40.dp)
-                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
-        ) {
-            Icon(Icons.Filled.Close, contentDescription = "Close trailer", tint = Color.White)
-        }
     }
 }
 

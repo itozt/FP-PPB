@@ -5,9 +5,20 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -18,23 +29,21 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.moviecatalogue.SplashScreen
 import com.example.moviecatalogue.domain.AuthRepository
+import com.example.moviecatalogue.domain.MediaType
 import com.example.moviecatalogue.domain.MovieRepository
+import com.example.moviecatalogue.ui.components.glassMorphism
 import com.example.moviecatalogue.ui.screens.auth.LoginScreen
 import com.example.moviecatalogue.ui.screens.auth.RegisterScreen
 import com.example.moviecatalogue.ui.screens.detail.DetailScreen
@@ -50,8 +59,8 @@ sealed class Screen(val route: String) {
     object Login    : Screen("login")
     object Register : Screen("register")
     object Main     : Screen("main")
-    object Detail   : Screen("detail/{movieId}") {
-        fun createRoute(movieId: Int) = "detail/$movieId"
+    object Detail   : Screen("detail/{movieId}/{mediaType}") {
+        fun createRoute(movieId: Int, mediaType: String = "movie") = "detail/$movieId/$mediaType"
     }
 }
 
@@ -76,7 +85,7 @@ fun MainScreen(
     repository: MovieRepository,
     authRepository: AuthRepository,
     isGuest: Boolean,
-    onMovieClick: (Int) -> Unit,
+    onMovieClick: (Int, String) -> Unit,
     onAccountAction: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { bottomNavItems.size })
@@ -89,43 +98,77 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                tonalElevation = 8.dp
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 28.dp) // Margin bawah untuk nav bar
             ) {
-                bottomNavItems.forEachIndexed { index, item ->
-                    val isSelected = pagerState.currentPage == index
-                    NavigationBarItem(
-                        selected = isSelected,
-                        onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                        icon = {
-                            Icon(
-                                imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-                                contentDescription = item.label
-                            )
-                        },
-                        label = {
-                            Text(text = item.label, style = MaterialTheme.typography.labelSmall)
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor   = MaterialTheme.colorScheme.primary,
-                            selectedTextColor   = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            indicatorColor      = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .glassMorphism(
+                            shape = androidx.compose.foundation.shape.CircleShape,
+                            backgroundColor = Color(0xFF1A1A1A).copy(alpha = 0.90f),
+                            strokeColor = Color.White.copy(alpha = 0.1f)
                         )
-                    )
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp), // <--- Memberikan gap 16.dp murni antar tombol
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                ) {
+                    bottomNavItems.forEachIndexed { index, item ->
+                        val isSelected = pagerState.currentPage == index
+                        
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(56.dp)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { scope.launch { pagerState.animateScrollToPage(index) } }
+                                ),
+                            contentAlignment = androidx.compose.ui.Alignment.Center
+                        ) {
+                            if (isSelected) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight()
+                                        .glassMorphism(
+                                            shape = androidx.compose.foundation.shape.CircleShape,
+                                            backgroundColor = Color(0xFFE50914).copy(alpha = 0.25f),
+                                            strokeColor = Color(0xFFE50914).copy(alpha = 0.5f)
+                                        )
+                                )
+                            }
+                            Column(
+                                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
+                                    contentDescription = item.label,
+                                    tint = if (isSelected) Color(0xFFE50914) else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = item.label,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (isSelected) Color(0xFFE50914) else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
                 }
             }
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
                 0 -> HomeScreen(
@@ -223,13 +266,18 @@ fun AppNavigation(
                 repository     = repository,
                 authRepository = authRepository,
                 isGuest        = isGuest,
-                onMovieClick   = { navController.navigate(Screen.Detail.createRoute(it)) },
+                onMovieClick   = { id, mediaType ->
+                    navController.navigate(Screen.Detail.createRoute(id, mediaType))
+                },
                 onAccountAction = goToLogin
             )
         }
         composable(
             route     = Screen.Detail.route,
-            arguments = listOf(navArgument("movieId") { type = NavType.IntType }),
+            arguments = listOf(
+                navArgument("movieId") { type = NavType.IntType },
+                navArgument("mediaType") { type = NavType.StringType; defaultValue = "movie" }
+            ),
             enterTransition = {
                 slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up, tween(350))
             },
@@ -238,8 +286,11 @@ fun AppNavigation(
             }
         ) { backStack ->
             val movieId = backStack.arguments?.getInt("movieId") ?: return@composable
+            val mediaTypeStr = backStack.arguments?.getString("mediaType") ?: "movie"
+            val mediaType = MediaType.fromString(mediaTypeStr)
             DetailScreen(
                 movieId        = movieId,
+                mediaType      = mediaType,
                 repository     = repository,
                 isGuest        = isGuest,
                 onBackClick    = { navController.popBackStack() },

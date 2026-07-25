@@ -14,19 +14,33 @@ interface MovieRepository {
 
     suspend fun getNowPlayingMovies(): Result<List<Movie>>
 
-    suspend fun getPopularMovies(): Result<List<Movie>>
+    suspend fun getPopularMovies(page: Int = 1): Result<List<Movie>>
 
     suspend fun getTopRatedMovies(): Result<List<Movie>>
 
-    // ─── Remote: Search ───────────────────────────────────────────────────────
+    // ─── Remote: TV Series Categories ─────────────────────────────────────────
 
-    suspend fun searchMovies(query: String): Result<List<Movie>>
+    suspend fun getPopularTvShows(): Result<List<Movie>>
+
+    suspend fun getTopRatedTvShows(): Result<List<Movie>>
+
+    // ─── Remote: Search & Discover ────────────────────────────────────────────
+
+    suspend fun searchMulti(query: String, page: Int = 1): Result<List<Movie>>
+
+    suspend fun discoverMoviesByGenre(genreId: Int, page: Int = 1): Result<List<Movie>>
 
     // ─── Remote: Detail ───────────────────────────────────────────────────────
 
     suspend fun getMovieDetail(movieId: Int): Result<MovieDetail>
 
     suspend fun getMovieVideos(movieId: Int): Result<List<MovieVideo>>
+
+    // ─── Remote: TV Series Detail ─────────────────────────────────────────────
+
+    suspend fun getTvDetail(tvId: Int): Result<MovieDetail>
+
+    suspend fun getTvSeasonEpisodes(tvId: Int, seasonNumber: Int): Result<List<TvEpisode>>
 
     // ─── Local: Watchlist (Room) ───────────────────────────────────────────────
 
@@ -43,4 +57,14 @@ interface MovieRepository {
     // ─── Remote: Genres ───────────────────────────────────────────────────────
 
     suspend fun getGenres(): Result<List<Genre>>
+
+    // ─── Local: Watch Progress ────────────────────────────────────────────────
+
+    suspend fun saveWatchProgress(progress: WatchProgress)
+
+    suspend fun getWatchProgress(contentId: Int, mediaType: MediaType, season: Int? = null, episode: Int? = null): WatchProgress?
+
+    fun getWatchProgressFlow(contentId: Int, mediaType: MediaType): Flow<WatchProgress?>
+
+    fun getContinueWatching(): Flow<List<WatchProgress>>
 }

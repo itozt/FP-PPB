@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.example.moviecatalogue.domain.Genre
+import com.example.moviecatalogue.domain.MediaType
 import com.example.moviecatalogue.domain.Movie
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -31,6 +32,7 @@ data class MovieEntity(
     val popularity: Double,
     val originalLanguage: String,
     val adult: Boolean,
+    val mediaType: String = "movie",
     val addedAt: Long = System.currentTimeMillis()
 ) {
     fun toDomain(): Movie = Movie(
@@ -46,7 +48,8 @@ data class MovieEntity(
         genres = genres,
         popularity = popularity,
         originalLanguage = originalLanguage,
-        adult = adult
+        adult = adult,
+        mediaType = MediaType.fromString(mediaType)
     )
 }
 
@@ -64,7 +67,8 @@ fun Movie.toEntity(userId: Int): MovieEntity = MovieEntity(
     genres = genres,
     popularity = popularity,
     originalLanguage = originalLanguage,
-    adult = adult
+    adult = adult,
+    mediaType = mediaType.value
 )
 
 /**
