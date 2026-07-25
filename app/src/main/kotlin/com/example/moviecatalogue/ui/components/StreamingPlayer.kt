@@ -173,10 +173,15 @@ private fun createStreamingWebView(
         ): Boolean {
             val reqUrl = request?.url ?: return false
             val host = reqUrl.host ?: return false
-            // Keep vidking.net embeds inside the WebView
+            
+            // Do not intercept iframes or background requests
+            if (request.isForMainFrame == false) return false
+            
+            // Keep vidking.net main frame loads inside the WebView
             if (host.contains("vidking.net", ignoreCase = true)) return false
-            // Open everything else externally
-            view?.context?.startActivity(Intent(Intent.ACTION_VIEW, reqUrl))
+            
+            // Block everything else (like Shopee redirects or popunder ads)
+            // by returning true without loading anything.
             return true
         }
     }
@@ -253,7 +258,7 @@ private fun streamingHtml(embedUrl: String): String = """
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen>
+          >
         </iframe>
         <script>
           window.addEventListener("message", function(event) {
