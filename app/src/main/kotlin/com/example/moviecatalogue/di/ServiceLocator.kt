@@ -58,6 +58,7 @@ object ServiceLocator {
         return MovieRepositoryImpl(
             apiService = apiService,
             movieDao = database.movieDao(),
+            watchProgressDao = database.watchProgressDao(),
             authRepository = provideAuthRepository(context)
         )
     }

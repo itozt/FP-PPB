@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +41,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun MovieSlider(
     movies: List<Movie>,
-    onMovieClick: (Int) -> Unit,
+    onMovieClick: (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (movies.isEmpty()) return
@@ -62,7 +63,7 @@ fun MovieSlider(
     LaunchedEffect(userInteracting) {
         if (!userInteracting && infinite) {
             while (true) {
-                delay(4_000)
+                delay(5_000) // Auto-scroll setiap 10 detik
                 pagerState.animateScrollToPage(
                     page = pagerState.currentPage + 1,
                     animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
@@ -72,8 +73,9 @@ fun MovieSlider(
     }
 
     // Detect drag → pause; resume 5 s after last interaction
-    LaunchedEffect(pagerState.isScrollInProgress) {
-        if (pagerState.isScrollInProgress) {
+    val isDragged by pagerState.interactionSource.collectIsDraggedAsState()
+    LaunchedEffect(isDragged) {
+        if (isDragged) {
             userInteracting = true
         } else {
             delay(5_000)
@@ -89,7 +91,7 @@ fun MovieSlider(
             val movie = movies[page % pageCount]
             SliderItem(
                 movie = movie,
-                onClick = { onMovieClick(movie.id) }
+                onClick = { onMovieClick(movie.id, movie.mediaType.value) }
             )
         }
 
@@ -146,7 +148,7 @@ private fun SliderItem(
                 .padding(start = 16.dp, end = 80.dp, bottom = 20.dp)
         ) {
             Text(
-                text = movie.title,
+                text = movie.displayTitle,
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 20.sp

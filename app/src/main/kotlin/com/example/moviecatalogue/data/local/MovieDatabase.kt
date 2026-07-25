@@ -8,11 +8,11 @@ import androidx.room.TypeConverters
 
 /**
  * Room Database configuration for MovFlix.
- * Holds the watchlist_movies table for offline-first capability.
+ * Holds the watchlist_movies and watch_progress tables for offline-first capability.
  */
 @Database(
-    entities = [MovieEntity::class, UserEntity::class],
-    version = 3,
+    entities = [MovieEntity::class, UserEntity::class, WatchProgressEntity::class],
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -21,6 +21,8 @@ abstract class MovieDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
 
     abstract fun userDao(): UserDao
+
+    abstract fun watchProgressDao(): WatchProgressDao
 
     companion object {
         private const val DATABASE_NAME = "movflix_db"

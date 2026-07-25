@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,7 +34,7 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     repository: MovieRepository,
     authRepository: AuthRepository,
-    onMovieClick: (Int) -> Unit,
+    onMovieClick: (Int, String) -> Unit,
     onAccountAction: () -> Unit
 ) {
     val viewModel: ProfileViewModel = viewModel(
@@ -84,7 +86,12 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+            contentPadding = PaddingValues(
+                start = 12.dp, 
+                top = 8.dp, 
+                end = 12.dp, 
+                bottom = if (uiState.isGuest || uiState.movies.isEmpty()) 12.dp else 100.dp
+            ),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -115,7 +122,7 @@ fun ProfileScreen(
                 else -> items(items = uiState.movies, key = { it.id }) { movie ->
                     WatchlistMovieCard(
                         movie = movie,
-                        onClick = { onMovieClick(movie.id) },
+                        onClick = { onMovieClick(movie.id, movie.mediaType.value) },
                         onDelete = { viewModel.removeMovie(movie) },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -203,7 +210,12 @@ private fun GuestWatchlistPrompt(onLogin: () -> Unit) {
             .padding(vertical = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "🔒", style = MaterialTheme.typography.displaySmall)
+        androidx.compose.material3.Icon(
+            imageVector = Icons.Default.Lock,
+            contentDescription = null,
+            modifier = Modifier.size(48.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(Modifier.height(12.dp))
         Text(
             text = "Login untuk menyimpan watchlist",
@@ -231,7 +243,12 @@ private fun EmptyWatchlist() {
             .padding(vertical = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "📚", style = MaterialTheme.typography.displayMedium)
+        androidx.compose.material3.Icon(
+            imageVector = Icons.Default.Bookmarks,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(Modifier.height(12.dp))
         Text(
             text = "Watchlist kamu masih kosong",

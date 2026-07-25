@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi Aplikasi To-Do Planner</title>
+    <style>
+        /* Container utama */
+        .blog-wrapper {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            padding: 20px;
+            background-color: transparent;
+        }
+
+        /* Bagian Profil/Detail Diri */
+        .student-info {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-left: 4px solid #b8860b;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .student-info p {
+            margin: 5px 0;
+            font-size: 15px;
+        }
+        .student-info span {
+            color: #ffd700;
+            font-weight: bold;
+            display: inline-block;
+            width: 120px;
+        }
+
+        /* Tabel Perkembangan Teknologi */
+        .tech-table-container {
+            overflow-x: auto;
+        }
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: transparent;
+            border: 1px solid #b8860b;
+        }
+        .tech-table thead {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #b8860b;
+        }
+        .tech-table th {
+            padding: 12px 15px;
+            text-align: left;
+            color: #ffd700;
+            border: 1px solid #b8860b;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+        .tech-table td {
+            padding: 12px 15px;
+            border: 1px solid #b8860b;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+        .tech-table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .tech-table tbody tr:hover {
+            background-color: rgba(184, 134, 11, 0.2);
+            transition: 0.3s;
+        }
+
+        /* Gambar di dalam tabel */
+        .table-img {
+            max-width: 100px;
+            max-height: 100px;
+            width: auto;
+            height: auto;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+            border: 1px solid #b8860b;
+            background-color: rgba(255,255,255,0.05);
+        }
+        
+        h1, h2, h3 {
+            color: #b6a271;
+        }
+
+        /* Tambahan styling untuk kompatibilitas content */
+        .justified-text {
+            text-align: justify;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        pre {
+            border: 2px solid #b6a271;
+            color: #D3D3D3;
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .code-label {
+            background-color: #b8860b;
+            color: #ffd700;
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 0;
+            font-weight: bold;
+            font-size: 0.9em;
+            border-left: 2px solid #b6a271;
+            border-right: 2px solid #b6a271;
+            border-top: 2px solid #b6a271;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.6em;
+            border-bottom: 2px solid #b8860b;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .subsection-title {
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .file-tree {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #b8860b;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            font-size: 0.75em;
+            color: #D3D3D3;
+            white-space: pre;
+            line-height: 1.4;
+        }
+
+        .file-tree code {
+            color: #ffd700;
+            white-space: pre;
+        }
+
+        .function-box {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #b8860b;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+        }
+
+        .function-name {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+        }
+
+        .feature-list {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #b8860b;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+        }
+
+        .feature-list ul {
+            margin-left: 20px;
+        }
+
+        .feature-list li {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .architecture-box {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #b8860b;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .architecture-box p {
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .arrow {
+            text-align: center;
+            color: #b8860b;
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: transparent;
+            border: 1px solid #b8860b;
+            margin-bottom: 20px;
+        }
+
+        table th {
+            background-color: rgba(0, 0, 0, 0.4);
+            color: #ffd700;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #b8860b;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        table td {
+            padding: 12px;
+            border: 1px solid #b8860b;
+            text-align: justify;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        table tbody tr:hover {
+            background-color: rgba(184, 134, 11, 0.2);
+            transition: 0.3s;
+        }
+
+        .highlight {
+            background-color: rgba(184, 134, 11, 0.3);
+            color: #ffd700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        ul {
+            color: #ffffff;
+        }
+
+        strong {
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-wrapper">
+        <!-- Student Info Section -->
+        <div class="student-info">
+            <p><span>Nama :</span> Christoforus Indra Bagus Pratama</p>
+            <p><span>NRP :</span> 5025231124</p>
+            <p><span>Mata Kuliah :</span> Pemrograman Perangkat Bergerak (C)</p>
+            <p><span>Tanggal :</span> 25 April 2026</p>
+            <p><span>Pertemuan :</span> Final Project (ETS)</p>
+            <p><span>Proyek :</span> To-Do Planner - Aplikasi Manajemen Tugas Android</p>
+            <p><span>Kode :</span> <a href="https://github.com/azharax/ETS-PPB" target="_blank">Link Github</a></p>
+          	<p><span>Presentasi :</span> <a href="https://canva.link/f2vpnif0pcwfbze" target="_blank">Link Canva</a></p>
+            <p><span>Video :</span> <a href="https://youtu.be/GK6FeApbSJo" target="_blank">Link Youtube</a></p>
+        </div>
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgFi9n30yQthLpkvNBgncjIiR3rIrQBD6PImOMleZ6htXZ7cTiWsDGI2xDq5mqC49Lw6apFlKAg0cbVw5O8CcVMaLWv3nM0hqHXuLol5B0QZ9wnbweCeOTVAIYLQK0JYOsZmuS588RTJObdMJ07wXQ9uWKMUuqO2OsVbjMhDDO6pWWYzw65VGwQF4nSV34/s900/task_planner_logo.png" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="320" data-original-height="900" data-original-width="900" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgFi9n30yQthLpkvNBgncjIiR3rIrQBD6PImOMleZ6htXZ7cTiWsDGI2xDq5mqC49Lw6apFlKAg0cbVw5O8CcVMaLWv3nM0hqHXuLol5B0QZ9wnbweCeOTVAIYLQK0JYOsZmuS588RTJObdMJ07wXQ9uWKMUuqO2OsVbjMhDDO6pWWYzw65VGwQF4nSV34/s320/task_planner_logo.png"/></a></div>
+        <!-- SECTION 1: DESKRIPSI APLIKASI -->
+        <div class="section">
+            <h2 class="section-title">1. Deskripsi Aplikasi</h2>
+            
+            <div class="justified-text">
+                <strong>To-Do Planner</strong> adalah aplikasi manajemen tugas dan perencanaan jadwal harian yang dirancang dengan teknologi modern untuk meningkatkan produktivitas pengguna. Aplikasi ini dibangun sepenuhnya menggunakan <span class="highlight">Jetpack Compose</span>, framework UI declarative terbaru dari Android yang memberikan pengalaman pengguna yang responsif, mulus, dan intuitif. Aplikasi ini memungkinkan pengguna untuk membuat, mengedit, menghapus, dan mengelola tugas mereka dengan cara yang efisien dan mudah digunakan.
+            </div>
+            
+            <div class="justified-text">
+                Dengan antarmuka yang modern dan minimalis, To-Do Planner menggabungkan fungsionalitas manajemen tugas dengan visualisasi kalender interaktif. Pengguna dapat beralih antara tampilan daftar tugas dan tampilan kalender dengan mudah menggunakan navigasi swipe yang intuitif. Aplikasi ini juga mendukung tugas berulang dengan berbagai opsi pengulangan seperti harian, mingguan, bulanan, atau pada hari-hari spesifik yang dipilih pengguna.
+            </div>
+            
+            <div class="justified-text">
+                <strong>Bahasa Antarmuka:</strong> Seluruh antarmuka aplikasi menggunakan bahasa Indonesia, sehingga mudah dipahami oleh pengguna lokal. <strong>Minimum SDK:</strong> Aplikasi kompatibel dengan Android 7.0 (API Level 24) dan versi Android yang lebih baru, memastikan jangkauan pengguna yang luas.
+            </div>
+        </div>
+        
+        <!-- SECTION 2: FITUR-FITUR APLIKASI -->
+        <div class="section">
+            <h2 class="section-title">2. Fitur-Fitur Utama Aplikasi</h2>
+            
+            <div class="subsection-title">2.1 Navigasi Mulus Berbasis Swipe</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Fitur:</strong> Transisi menu antara dua layar utama dapat dilakukan dengan mengusap layar (swipe gesture) secara horizontal. Pengguna dapat dengan mudah beralih antara tampilan "Tugas" (Task List) dan "Kalender" (Calendar View) tanpa perlu mengetuk tombol navigasi yang konvensional.
+                </div>
+                <div class="justified-text">
+                    <strong>Implementasi:</strong> Menggunakan <span class="highlight">HorizontalPager</span> dari Jetpack Compose yang memberikan pengalaman navigasi yang halus dan responsif. Setiap page dapat diakses dengan swipe gesture yang natural.
+                </div>
+                <div class="justified-text">
+                    <strong>Keuntungan:</strong> UX yang lebih modern dan intuitif, pengalaman navigasi yang lebih cepat, dan interface yang lebih rapi tanpa terlalu banyak tombol di layar.
+                </div>
+            </div>
+            
+            <div class="subsection-title">2.2 Daftar Tugas Cerdas (Smart Task List)</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Pengelompokan Otomatis:</strong> Daftar tugas secara otomatis dikelompokkan berdasarkan kategori waktu relatif terhadap hari sekarang:
+                </div>
+                <ul>
+                    <li><strong>Lewat Waktu:</strong> Menampilkan hanya tugas yang belum selesai tetapi sudah melewati tenggat waktu. Grup ini eksklusif dan membantu pengguna fokus pada prioritas tinggi.</li>
+                    <li><strong>Hari Ini:</strong> Menampilkan semua tugas yang memiliki tenggat waktu di hari sekarang.</li>
+                    <li><strong>Besok:</strong> Tugas dengan tenggat waktu di hari berikutnya.</li>
+                    <li><strong>Lusa:</strong> Tugas dengan tenggat waktu di dua hari ke depan.</li>
+                    <li><strong>Tanpa Tenggat:</strong> Tugas yang tidak memiliki tanggal tenggat waktu, kategori ini terbuka secara default agar mudah diakses.</li>
+                </ul>
+                <div class="justified-text">
+                    <strong>Toggle Tampilan:</strong> Pengguna dapat menyembunyikan atau menampilkan daftar tugas yang sudah selesai dengan satu tombol toggle, memberikan fleksibilitas dalam melihat daftar tugas yang relevan.
+                </div>
+            </div>
+            
+            <div class="subsection-title">2.3 Kalender Interaktif</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Grid Bulanan:</strong> Menampilkan kalender bulanan dalam format grid yang intuitif, dengan setiap sel mewakili satu hari. Hari-hari yang memiliki tugas ditandai dengan indikator visual (titik penanda atau highlight khusus).
+                </div>
+                <div class="justified-text">
+                    <strong>Daftar Tugas Per Tanggal:</strong> Ketika pengguna mengklik tanggal tertentu di kalender, aplikasi menampilkan semua tugas yang terkait dengan tanggal tersebut. Ini memudahkan pengguna untuk melihat apa yang harus dilakukan pada hari tertentu.
+                </div>
+                <div class="justified-text">
+                    <strong>Tombol Tambah Tugas Instan:</strong> Di tampilan kalender, terdapat tombol (+) yang memungkinkan pengguna menambahkan tugas baru untuk tanggal yang sedang dipilih. Sistem secara otomatis mendeteksi tanggal yang dipilih dan mengaturnya sebagai tenggat waktu default untuk tugas baru.
+                </div>
+                <div class="justified-text">
+                    <strong>Navigasi Bulan:</strong> Pengguna dapat navigasi ke bulan sebelumnya atau bulan berikutnya dengan gesture swipe horizontal, memberikan fleksibilitas dalam menjelajahi kalender.
+                </div>
+            </div>
+            
+            <div class="subsection-title">2.4 Manajemen Tugas Lanjutan</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Tenggat Waktu Detail:</strong> Aplikasi mendukung pengaturan tenggat waktu berdasarkan tanggal spesifik. Pengguna juga dapat menambahkan waktu spesifik (jam dan menit) untuk tugas mereka, sehingga tugas dapat dijadwalkan pada waktu tertentu.
+                </div>
+                <div class="justified-text">
+                    <strong>Tugas Berulang (Recurring Tasks):</strong> Aplikasi menyediakan fitur untuk membuat tugas berulang otomatis dengan berbagai opsi:
+                </div>
+                <ul>
+                    <li><strong>Harian:</strong> Tugas berulang setiap hari</li>
+                    <li><strong>Mingguan:</strong> Tugas berulang setiap minggu pada hari yang sama</li>
+                    <li><strong>Bulanan:</strong> Tugas berulang setiap bulan pada tanggal yang sama</li>
+                    <li><strong>Hari Kustom:</strong> Pengguna dapat memilih hari-hari spesifik untuk pengulangan (misalnya: Senin dan Rabu setiap minggu)</li>
+                </ul>
+                <div class="justified-text">
+                    <strong>Kontrol Pengulangan:</strong> Pengguna dapat menentukan berapa kali tugas akan diulang, atau membiarkan tugas berulang tanpa batas. Dengan fitur ini, pengguna memiliki kontrol penuh atas automasi tugas mereka.
+                </div>
+                <div class="justified-text">
+                    <strong>Edit Tanpa Mengganggu Perulangan:</strong> Ketika mengedit tugas yang berulang, pengguna dapat mengubah judul, catatan, atau tanggal tanpa mempengaruhi siklus perulangan sebelumnya. Ini memberikan fleksibilitas dalam manajemen tugas.
+                </div>
+            </div>
+            
+            <div class="subsection-title">2.5 Interaksi dan Gesture Modern</div>
+            <div class="feature-list">
+                <div class="justified-text">
+                    <strong>Swipe to Delete:</strong> Pengguna dapat menghapus tugas dengan gesture swipe ke samping. Fitur ini memberikan pengalaman yang smooth dan intuitif dalam mengelola daftar tugas.
+                </div>
+                <div class="justified-text">
+                    <strong>Undo Delete:</strong> Setelah menghapus tugas, pengguna dapat membatalkan penghapusan melalui notifikasi Snackbar yang muncul di bagian bawah layar, memberikan jaminan keamanan bagi pengguna.
+                </div>
+                <div class="justified-text">
+                    <strong>Splash Screen:</strong> Aplikasi menampilkan splash screen yang estetik dengan logo aplikasi di awal peluncuran, memberikan kesan profesional saat pengguna membuka aplikasi.
+                </div>
+                <div class="justified-text">
+                    <strong>Checkbox dan Flag:</strong> Pengguna dapat menandai tugas sebagai selesai dengan checkbox, dan menandai tugas penting dengan fitur flag (bendera), memberikan kontrol penuh atas status tugas.
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 3: ARSITEKTUR APLIKASI -->
+        <div class="section">
+            <h2 class="section-title">3. Arsitektur Aplikasi</h2>
+            
+            <div class="justified-text">
+                Aplikasi To-Do Planner menggunakan arsitektur <span class="highlight">MVVM (Model-View-ViewModel)</span>, yang merupakan pola arsitektur modern yang direkomendasikan oleh Google untuk pengembangan aplikasi Android. Arsitektur ini memisahkan logika bisnis dari antarmuka pengguna, membuat kode lebih terstruktur, testable, dan mudah untuk di-maintain.
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <div class="architecture-box">
+                    <p><strong>📱 UI Layer (Presentation)</strong></p>
+                    <p>Jetpack Compose, Material 3, Navigation, HorizontalPager</p>
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="architecture-box">
+                    <p><strong>🧠 ViewModel Layer (State Management)</strong></p>
+                    <p>StateFlow, ViewModel, State Management</p>
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="architecture-box">
+                    <p><strong>📦 Repository Layer (Data Abstraction)</strong></p>
+                    <p>TaskRepository, Dependency Injection</p>
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="architecture-box">
+                    <p><strong>💾 Data Layer (Local Storage)</strong></p>
+                    <p>Room Database, SQLite, Coroutines</p>
+                </div>
+            </div>
+            
+            <div class="subsection-title">3.1 Penjelasan Setiap Layer</div>
+            
+            <div class="tech-table-container">
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Layer</th>
+                            <th>Deskripsi</th>
+                            <th>Tanggung Jawab</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>UI Layer</strong></td>
+                            <td>Lapisan presentasi yang bertanggung jawab menampilkan antarmuka kepada pengguna. Menggunakan Jetpack Compose untuk UI deklaratif dan Material 3 untuk design system yang modern.</td>
+                            <td>Menampilkan data, menangkap input pengguna, navigasi antar layar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ViewModel</strong></td>
+                            <td>Lapisan yang mengelola state (kondisi) aplikasi dan logika presentasi. Menggunakan StateFlow untuk reactive state management yang efficient.</td>
+                            <td>Mengelola state UI, menangani event dari UI, menyediakan data ke UI</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Repository</strong></td>
+                            <td>Lapisan abstraksi yang menghubungkan ViewModel dengan data layer. Menyembunyikan detail implementasi data access dari ViewModel.</td>
+                            <td>Menyediakan interface untuk akses data, logika bisnis tingkat tinggi</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Layer</strong></td>
+                            <td>Lapisan yang mengelola penyimpanan data lokal menggunakan Room Database (SQLite). Menggunakan Coroutines untuk operasi asynchronous yang aman dan efficient.</td>
+                            <td>Akses database, penyimpanan data, query data</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="subsection-title">3.2 Dependency Injection</div>
+            <div class="justified-text">
+                Aplikasi menggunakan sistem Dependency Injection sederhana melalui <span class="highlight">AppModule</span> yang bertanggung jawab untuk membuat instance dari repository dan komponen lainnya. Ini memastikan bahwa setiap komponen mendapatkan dependency yang benar dan singleton instances di-maintain dengan baik.
+            </div>
+        </div>
+        
+        <!-- SECTION 4: STRUKTUR FILE DAN FOLDER -->
+        <div class="section">
+            <h2 class="section-title">4. Struktur File dan Folder Proyek</h2>
+            
+            <div class="justified-text">
+                Berikut adalah struktur direktori lengkap dari proyek To-Do Planner, dengan penjelasan fungsi setiap folder dan file penting:
+            </div>
+            
+            <div class="code-label">📁 Struktur Proyek Lengkap</div>
+            <div class="file-tree"><pre>ETS-PPB/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/example/todolist/
+│   │   │   │   ├── MainActivity.kt
+│   │   │   │   │   → Entry point aplikasi, mengatur navigation dan UI
+│   │   │   │   │
+│   │   │   │   ├── domain/
+│   │   │   │   │   ├── model/
+│   │   │   │   │   │   ├── Task.kt → Entity Task model
+│   │   │   │   │   │   └── RepeatMode.kt → Enum untuk pengulangan
+│   │   │   │   │
+│   │   │   │   ├── data/
+│   │   │   │   │   ├── local/ → Room Database
+│   │   │   │   │   │   ├── TaskDao.kt
+│   │   │   │   │   │   └── TaskDatabase.kt
+│   │   │   │   │   └── repository/
+│   │   │   │   │       └── TaskRepository.kt
+│   │   │   │   │
+│   │   │   │   ├── ui/
+│   │   │   │   │   ├── tasklist/ → Task List Screen
+│   │   │   │   │   │   ├── TaskListScreen.kt
+│   │   │   │   │   │   ├── AddTaskDialog.kt
+│   │   │   │   │   │   └── TaskFilter.kt
+│   │   │   │   │   ├── calendar/ → Calendar Screen
+│   │   │   │   │   │   └── CalendarScreen.kt
+│   │   │   │   │   └── theme/ → Material 3 Theme
+│   │   │   │   │       └── Theme.kt
+│   │   │   │   │
+│   │   │   │   ├── viewmodel/
+│   │   │   │   │   ├── TaskListViewModel.kt
+│   │   │   │   │   └── TaskListViewModelFactory.kt
+│   │   │   │   │
+│   │   │   │   └── di/
+│   │   │   │       └── AppModule.kt → Dependency Injection
+│   │   │   │
+│   │   │   ├── res/ → Resources
+│   │   │   │   ├── drawable/ → Images & drawables
+│   │   │   │   └── values/ → Strings & Colors
+│   │   │   │
+│   │   │   └── AndroidManifest.xml
+│   │   │
+│   │   ├── test/ → Unit Tests
+│   │   └── androidTest/ → Integration Tests
+│   │
+│   └── build.gradle.kts → Module build config
+│
+├── build.gradle.kts → Root build config
+├── settings.gradle.kts → Project settings
+├── README.md → Project documentation
+└── blogger.html → This file</pre></div>
+            
+            <div class="subsection-title">4.1 Penjelasan Folder dan File Utama</div>
+            
+            <div class="function-box">
+                <div class="function-name">📄 MainActivity.kt</div>
+                <div class="justified-text">
+                    File utama entry point aplikasi. Bertanggung jawab untuk inisialisasi aplikasi, mengatur theme, menampilkan splash screen, dan mengatur navigation antara layar Task List dan Calendar menggunakan HorizontalPager.
+                </div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📁 domain/model/</div>
+                <div class="justified-text">
+                    Folder ini berisi entity model aplikasi. <strong>Task.kt</strong> mendefinisikan data class untuk Task dengan properti seperti id, title, notes, deadline, dan repeat settings. <strong>RepeatMode.kt</strong> adalah enum yang mendefinisikan mode pengulangan tugas (NONE, DAILY, WEEKLY, MONTHLY, CUSTOM_DAYS).
+                </div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📁 data/local/</div>
+                <div class="justified-text">
+                    Folder ini berisi implementasi Room Database. <strong>TaskDao.kt</strong> mendefinisikan interface untuk operasi database (CRUD operations). <strong>TaskDatabase.kt</strong> mendefinisikan database class dan menyediakan instance singleton untuk database access di seluruh aplikasi.
+                </div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📁 data/repository/</div>
+                <div class="justified-text">
+                    <strong>TaskRepository.kt</strong> mengimplementasikan repository pattern yang menyediakan interface abstrak untuk akses data. Repository ini menangani logika bisnis seperti filtering tasks by date, grouping, dan recurring task generation.
+                </div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📁 ui/tasklist/</div>
+                <div class="justified-text">
+                    <strong>TaskListScreen.kt</strong> adalah composable utama untuk menampilkan daftar tugas dengan grouping berdasarkan waktu. <strong>AddTaskDialog.kt</strong> adalah dialog untuk menambah atau mengedit tugas, dengan fitur lengkap seperti date picker, time picker, repeat settings, dan notes. <strong>TaskFilter.kt</strong> berisi logic untuk filtering dan grouping tasks.
+                </div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📁 ui/calendar/</div>
+                <div class="justified-text">
+                    <strong>CalendarScreen.kt</strong> adalah composable untuk menampilkan kalender bulanan interaktif dengan indikator hari yang memiliki tugas, dan menampilkan daftar tugas untuk tanggal yang dipilih.
+                </div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📁 viewmodel/</div>
+                <div class="justified-text">
+                    <strong>TaskListViewModel.kt</strong> adalah ViewModel yang mengelola state aplikasi dan logika presentasi. Menggunakan StateFlow untuk reactive state management. <strong>TaskListViewModelFactory.kt</strong> adalah factory untuk membuat instance ViewModel dengan dependency injection yang tepat.
+                </div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📁 di/</div>
+                <div class="justified-text">
+                    <strong>AppModule.kt</strong> adalah dependency injection container yang bertanggung jawab untuk membuat instance dari repository dan komponen lainnya, memastikan singleton pattern terjaga dengan baik.
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 5: PENJELASAN MAINACTIVITY.KT -->
+        <div class="section">
+            <h2 class="section-title">5. Penjelasan Detil Kode MainActivity.kt</h2>
+            
+            <div class="justified-text">
+                MainActivity.kt adalah file utama yang mengatur entry point aplikasi, navigation flow, dan integrasi berbagai komponen UI. File ini menggunakan Jetpack Compose untuk membangun UI secara deklaratif. Berikut adalah penjelasan detil dari setiap fungsi dan kode dalam MainActivity.kt.
+            </div>
+            
+            <div class="subsection-title">5.1 MainActivity Class dan onCreate Function</div>
+            
+            <div class="function-box">
+                <div class="function-name">🎯 MainActivity : ComponentActivity()</div>
+                <div class="justified-text">
+                    MainActivity adalah activity utama yang extends ComponentActivity (dari Jetpack Compose). Ini adalah entry point aplikasi yang akan dijalankan pertama kali saat user membuka aplikasi.
+                </div>
+            </div>
+            
+            <div class="code-label">onCreate() Function</div>
+            <pre>override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    enableEdgeToEdge()
+    setContent {
+        ToDoListTheme {
+            var showSplash by remember { mutableStateOf(true) }
+            
+            LaunchedEffect(Unit) {
+                kotlinx.coroutines.delay(1500)
+                showSplash = false
+            }
+
+            if (showSplash) {
+                SplashScreen()
+            } else {
+                MainScreen()
+            }
+        }
+    }
+}</pre>
+            
+            <div class="justified-text">
+                <strong>Penjelasan:</strong>
+            </div>
+            
+            <ul style="text-align: justify; margin-left: 20px;">
+                <li><strong>super.onCreate(savedInstanceState):</strong> Memanggil super class untuk inisialisasi activity standar Android.</li>
+                <li><strong>enableEdgeToEdge():</strong> Mengaktifkan edge-to-edge rendering untuk menggunakan seluruh ruang layar, termasuk area di belakang system UI (status bar dan navigation bar).</li>
+                <li><strong>setContent { }:</strong> Method yang menetapkan Compose UI untuk activity. Semua Composable UI didefinisikan di dalam lambda ini.</li>
+                <li><strong>ToDoListTheme:</strong> Wrapper theme yang mengaplikasikan Material 3 theme dan color palette ke seluruh aplikasi.</li>
+                <li><strong>var showSplash by remember { mutableStateOf(true) }:</strong> State variable yang melacak apakah splash screen harus ditampilkan. Diinisialisasi dengan nilai true.</li>
+                <li><strong>LaunchedEffect(Unit):</strong> Side effect yang dijalankan saat composable pertama kali dirender. Menggunakan delay 1500ms (1.5 detik) sebelum menyembunyikan splash screen.</li>
+                <li><strong>Conditional Rendering:</strong> Jika showSplash true, tampilkan SplashScreen. Jika false, tampilkan MainScreen (aplikasi utama).</li>
+            </ul>
+            
+            <div class="subsection-title">5.2 MainScreen Composable Function</div>
+            
+            <div class="code-label">MainScreen() Composable</div>
+            <pre>@Composable
+fun MainScreen() {
+    val pagerState = rememberPagerState(pageCount = { 2 })
+    val coroutineScope = rememberCoroutineScope()
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Tugas") },
+                    label = { Text("Tugas") },
+                    selected = pagerState.currentPage == 0,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(0)
+                        }
+                    }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.DateRange, contentDescription = "Kalender") },
+                    label = { Text("Kalender") },
+                    selected = pagerState.currentPage == 1,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(1)
+                        }
+                    }
+                )
+            }
+        }
+    ) { innerPadding ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.padding(innerPadding)
+        ) { page ->
+            if (page == 0) {
+                ToDoListApp()
+            } else {
+                // Calendar Screen
+            }
+        }
+    }
+}</pre>
+            
+            <div class="justified-text">
+                <strong>Penjelasan:</strong>
+            </div>
+            
+            <ul style="text-align: justify; margin-left: 20px;">
+                <li><strong>pagerState = rememberPagerState(pageCount = { 2 }):</strong> Membuat pager state untuk mengelola navigasi antara 2 page (Task List dan Calendar). PagerState melacak current page yang sedang ditampilkan.</li>
+                <li><strong>coroutineScope = rememberCoroutineScope():</strong> Membuat coroutine scope untuk menjalankan operasi async seperti animasi page scroll.</li>
+                <li><strong>Scaffold:</strong> Layout komponen Material 3 yang menyediakan struktur dasar dengan berbagai slot (topBar, bottomBar, content, etc.).</li>
+                <li><strong>NavigationBar:</strong> Bottom navigation bar yang menampilkan 2 item navigasi (Tugas dan Kalender).</li>
+                <li><strong>selected = pagerState.currentPage == 0:</strong> Item dianggap selected jika index page sama dengan index item.</li>
+                <li><strong>onClick dengan coroutineScope.launch { }:</strong> Saat user klik item navigation, animasi page scroll ke halaman yang sesuai menggunakan pagerState.animateScrollToPage().</li>
+                <li><strong>HorizontalPager:</strong> Komponen yang mengimplementasikan horizontal swipe navigation dengan 2 page. User dapat swipe layar untuk berpindah halaman.</li>
+                <li><strong>page == 0 → ToDoListApp(), page == 1 → CalendarScreen:</strong> Logic untuk menampilkan screen yang sesuai berdasarkan current page.</li>
+            </ul>
+            
+            <div class="subsection-title">5.3 ToDoListApp Composable Function</div>
+            
+            <div class="code-label">ToDoListApp() Composable</div>
+            <pre>@Composable
+fun ToDoListApp() {
+    val context = LocalContext.current
+    val repository = remember(context) {
+        AppModule.provideTaskRepository(context)
+    }
+    val taskListViewModel: TaskListViewModel = viewModel(
+        factory = TaskListViewModelFactory(repository)
+    )
+    val uiState by taskListViewModel.uiState.collectAsState()
+
+    TaskListScreen(
+        tasks = uiState.tasks,
+        groupedTasks = uiState.groupedTasks,
+        showCompleted = uiState.showCompleted,
+        onToggleShowCompleted = taskListViewModel::toggleShowCompleted,
+        onTaskCheckedChange = taskListViewModel::onTaskCheckedChanged,
+        onToggleFlagTask = { task, isImportant ->
+            taskListViewModel.editTask(task.copy(isImportant = isImportant))
+        },
+        onAddTask = { title, notes, deadlineMillis, deadlineHasTime, repeatMode, repeatDays, repeatCount -> 
+            taskListViewModel.addTask(title, notes, deadlineMillis, deadlineHasTime, repeatMode, repeatDays, repeatCount) 
+        },
+        onEditTask = taskListViewModel::editTask,
+        onDeleteTask = taskListViewModel::deleteTask,
+        onUndoDelete = taskListViewModel::undoDelete
+    )
+}</pre>
+            
+            <div class="justified-text">
+                <strong>Penjelasan:</strong>
+            </div>
+            
+            <ul style="text-align: justify; margin-left: 20px;">
+                <li><strong>context = LocalContext.current:</strong> Mengambil context aplikasi untuk keperluan repository initialization.</li>
+                <li><strong>repository = remember(context) { }:</strong> Membuat instance repository menggunakan AppModule. Remember function memastikan repository hanya dibuat sekali (singleton) dan tidak di-recreate saat recomposition.</li>
+                <li><strong>taskListViewModel = viewModel(factory = TaskListViewModelFactory(repository)):</strong> Membuat instance ViewModel menggunakan factory pattern. Factory ini menerima repository sebagai dependency yang akan diinjeksikan ke ViewModel.</li>
+                <li><strong>uiState = taskListViewModel.uiState.collectAsState():</strong> Mengumpulkan StateFlow dari ViewModel sebagai Compose State. Setiap kali state berubah, UI akan recompose otomatis.</li>
+                <li><strong>TaskListScreen(...):</strong> Menampilkan screen daftar tugas dengan meneruskan state dan callback ke child composable.</li>
+                <li><strong>Callback Functions:</strong> Semua callback (onAddTask, onEditTask, dll) dihubungkan ke ViewModel methods, sehingga user interaction di UI akan memanggil ViewModel methods yang mengupdate state.</li>
+            </ul>
+            
+            <div class="subsection-title">5.4 SplashScreen Composable Function</div>
+            
+            <div class="code-label">SplashScreen() Composable</div>
+            <pre>@Composable
+fun SplashScreen() {
+    androidx.compose.foundation.layout.Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface),
+        contentAlignment = androidx.compose.ui.Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.task_planner_logo),
+            contentDescription = "App Logo",
+            modifier = Modifier.size(200.dp)
+        )
+    }
+}</pre>
+            
+            <div class="justified-text">
+                <strong>Penjelasan:</strong>
+            </div>
+            
+            <ul style="text-align: justify; margin-left: 20px;">
+                <li><strong>Box(modifier = Modifier.fillMaxSize()):</strong> Container yang mengisi seluruh ruang layar dengan ukuran maksimal.</li>
+                <li><strong>.background(MaterialTheme.colorScheme.surface):</strong> Mengatur background color menggunakan Material 3 surface color.</li>
+                <li><strong>contentAlignment = Alignment.Center:</strong> Menempatkan content (logo) di tengah-tengah Box.</li>
+                <li><strong>Image(painter = painterResource(id = R.drawable.task_planner_logo)):</strong> Menampilkan logo aplikasi dari resource drawable.</li>
+                <li><strong>modifier = Modifier.size(200.dp):</strong> Mengatur ukuran image menjadi 200.dp x 200.dp.</li>
+            </ul>
+            
+            <div class="subsection-title">5.5 Calendar Screen Integration</div>
+            
+            <div class="code-label">Calendar Screen di MainScreen</div>
+            <pre>} else {
+    val context = LocalContext.current
+    val repository = remember(context) { AppModule.provideTaskRepository(context) }
+    val taskListViewModel: TaskListViewModel = viewModel(
+        factory = TaskListViewModelFactory(repository)
+    )
+    val uiState by taskListViewModel.uiState.collectAsState()
+
+    CalendarScreen(
+        tasks = uiState.tasks,
+        onTaskCheckedChange = taskListViewModel::onTaskCheckedChanged,
+        onToggleFlagTask = { task: Task, isImportant: Boolean ->
+            taskListViewModel.editTask(task.copy(isImportant = isImportant))
+        },
+        onDeleteTask = taskListViewModel::deleteTask,
+        onEditTask = taskListViewModel::editTask,
+        onAddTask = { title: String, notes: String?, deadlineMillis: Long?, deadlineHasTime: Boolean, repeatMode: com.example.todolist.domain.model.RepeatMode, repeatDays: String?, repeatCount: Int? ->
+            taskListViewModel.addTask(title, notes, deadlineMillis, deadlineHasTime, repeatMode, repeatDays, repeatCount)
+        }
+    )
+}</pre>
+            
+            <div class="justified-text">
+                <strong>Penjelasan:</strong>
+            </div>
+            
+            <ul style="text-align: justify; margin-left: 20px;">
+                <li><strong>Kondisi page == 1:</strong> Ketika user berada di page kedua (Kalender), kode ini akan dijalankan.</li>
+                <li><strong>Repository dan ViewModel Initialization:</strong> Sama seperti ToDoListApp, dilakukan DI untuk mendapatkan repository dan ViewModel instance.</li>
+                <li><strong>CalendarScreen(...):</strong> Menampilkan calendar screen dengan data dan callbacks yang sama seperti TaskListScreen.</li>
+                <li><strong>Parameter Details:</strong> onAddTask callback menerima semua parameter termasuk title, notes, deadline, repeatMode, etc., memastikan fitur repeat dan deadline juga tersedia di calendar view.</li>
+            </ul>
+        </div>
+        
+        <!-- SECTION 6: ALUR EKSEKUSI APLIKASI -->
+        <div class="section">
+            <h2 class="section-title">6. Alur Eksekusi Aplikasi</h2>
+            
+            <div class="justified-text">
+                Berikut adalah alur lengkap eksekusi aplikasi dari saat diluncurkan hingga siap digunakan:
+            </div>
+            
+            <div style="background-color: rgba(0, 0, 0, 0.2); padding: 15px; border-left: 3px solid #b8860b; border-radius: 3px; margin-bottom: 15px;">
+                <div class="justified-text">
+                    <strong>1. Aplikasi Diluncurkan:</strong> User mengklik icon aplikasi di home screen atau launcher. Android system memanggil MainActivity.
+                </div>
+                <div class="justified-text">
+                    <strong>2. onCreate() Dijalankan:</strong> Method onCreate di MainActivity dijalankan. enableEdgeToEdge() dipanggil untuk menggunakan full screen space. setContent { } didefinisikan dengan Compose UI.
+                </div>
+                <div class="justified-text">
+                    <strong>3. Splash Screen Ditampilkan:</strong> showSplash state diset ke true, sehingga SplashScreen() composable dirender. Logo aplikasi ditampilkan di tengah layar.
+                </div>
+                <div class="justified-text">
+                    <strong>4. Delay 1.5 Detik:</strong> LaunchedEffect menjalankan delay 1500ms, memberikan waktu user melihat splash screen.
+                </div>
+                <div class="justified-text">
+                    <strong>5. Transisi ke Main Screen:</strong> Setelah delay selesai, showSplash diset ke false. UI recompose dan menampilkan MainScreen() sebagai gantinya.
+                </div>
+                <div class="justified-text">
+                    <strong>6. Main Screen Diinisialisasi:</strong> MainScreen() membuat HorizontalPager dengan 2 page, merender NavigationBar dengan 2 menu item (Tugas dan Kalender). Page 0 (Tugas) ditampilkan secara default.
+                </div>
+                <div class="justified-text">
+                    <strong>7. ViewModel dan Repository Initialization:</strong> ToDoListApp() membuat repository instance menggunakan AppModule, yang membuat/mengambil instance dari Room Database. ViewModel dibuat menggunakan factory pattern dengan repository dependency.
+                </div>
+                <div class="justified-text">
+                    <strong>8. Data Dimuat dari Database:</strong> ViewModel mengakses repository untuk mengambil semua tasks dari database. StateFlow uiState di-update dengan data tasks, groupedTasks (tasks yang digroup berdasarkan waktu), dan showCompleted status.
+                </div>
+                <div class="justified-text">
+                    <strong>9. TaskListScreen Dirender:</strong> TaskListScreen() menerima state dari ViewModel dan merender UI dengan daftar tugas yang dikelompokkan. UI siap untuk interaksi user.
+                </div>
+                <div class="justified-text">
+                    <strong>10. User Dapat Berinteraksi:</strong> User dapat menambah tugas, mengedit, menghapus, atau beralih ke kalender dengan swipe atau menu navigation. Setiap interaksi memanggil ViewModel callback yang mengupdate state dan database.
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION 7: INTERAKSI USER DENGAN APLIKASI -->
+        <div class="section">
+            <h2 class="section-title">7. Interaksi User dan Event Flow</h2>
+            
+            <div class="justified-text">
+                Aplikasi menggunakan event-driven architecture di mana user interactions di UI memanggil callback yang dihubungkan ke ViewModel methods. Berikut adalah contoh-contoh event flow yang terjadi dalam aplikasi:
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📝 User Menambah Tugas Baru</div>
+                <div class="justified-text">
+                    <strong>Flow:</strong> User klik tombol "+" di TaskListScreen → Dialog AddTaskDialog terbuka → User input title, notes, deadline, repeat settings → User klik button "Simpan" → onAddTask callback dipanggil dengan semua parameter → ViewModel.addTask() dijalankan → Repository.addTask() dipanggil → Task disimpan ke Room Database → StateFlow uiState di-update dengan task baru → UI recompose menampilkan task baru.
+                </div>
+              <div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhWr7wZVaVKqYuua-1SvXaFlsam8SQzQEeMJc2GPea-wcqs2GbRZd2u8YTaOIXCy1dW58H6TQCRkqa94XSoIPICzbeMcUS5S43Sby2hVHsFHQVKuV2p55dPHdVNG1FSGwk4vkg34fDTD5TWK2plaena0dk9SRKajV3ap1mCFzRIj5or_9OymzO4OK6ls_Q/s1600/WhatsApp%20Image%202026-04-25%20at%2009.55.20%20%282%29.jpeg" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" height="600" data-original-height="1600" data-original-width="837" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhWr7wZVaVKqYuua-1SvXaFlsam8SQzQEeMJc2GPea-wcqs2GbRZd2u8YTaOIXCy1dW58H6TQCRkqa94XSoIPICzbeMcUS5S43Sby2hVHsFHQVKuV2p55dPHdVNG1FSGwk4vkg34fDTD5TWK2plaena0dk9SRKajV3ap1mCFzRIj5or_9OymzO4OK6ls_Q/s600/WhatsApp%20Image%202026-04-25%20at%2009.55.20%20%282%29.jpeg"/></a></div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">✅ User Menyelesaikan Tugas</div>
+                <div class="justified-text">
+                    <strong>Flow:</strong> User klik checkbox pada task card → onTaskCheckedChange callback dipanggil dengan task dan isDone status → ViewModel.onTaskCheckedChanged() dijalankan → Repository.editTask() dipanggil → Task status di-update di database → StateFlow di-update → UI recompose menampilkan checkbox dalam state checked.
+                </div>
+              <div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEghFD2iUWiFei4pbM0bV_6yPD3HJ_wt4_lS8pCZA-qfQIOIEErGtdxwMD5A5K-DW_yuZYrESEYRM4DTn4P4SXnlHRV-zt7OxSwq6xiywMEWv0oXXmQLi7OVzUPFn8ss9T-SS_olTa8yaQkbDX918Z5Nc6ndYi1JRLNw-np9b5Z6VyoE-1K9xpmjOlsL1Kc/s1600/WhatsApp%20Image%202026-04-25%20at%2009.55.20%20%281%29.jpeg" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" height="600" data-original-height="1600" data-original-width="836" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEghFD2iUWiFei4pbM0bV_6yPD3HJ_wt4_lS8pCZA-qfQIOIEErGtdxwMD5A5K-DW_yuZYrESEYRM4DTn4P4SXnlHRV-zt7OxSwq6xiywMEWv0oXXmQLi7OVzUPFn8ss9T-SS_olTa8yaQkbDX918Z5Nc6ndYi1JRLNw-np9b5Z6VyoE-1K9xpmjOlsL1Kc/s600/WhatsApp%20Image%202026-04-25%20at%2009.55.20%20%281%29.jpeg"/></a></div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">⭐ User Menandai Task Penting</div>
+                <div class="justified-text">
+                    <strong>Flow:</strong> User klik icon flag pada task card → onToggleFlagTask callback dipanggil dengan task dan isImportant boolean → ViewModel.editTask() dijalankan dengan task.copy(isImportant = isImportant) → Repository.editTask() dijalankan → Task isImportant property di-update → UI recompose menampilkan flag icon dalam state active/inactive.
+                </div>
+              <div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjVrzhHubMLha8_J8Mht2x3xKOi5r0r9hcgwf2Qtufnx3GX3ddLRmaKoEhqpMj7jCHsnSTIquFtQST3L0B4798cQYZUSstR_kK0fTWQeXVjVrj5DUYPeKd6cC2mavyJEAL1wfa3gT1LUvxpaIrTgFlSbK73wCM2ezG8fKK3yEtRRDN_s46Tw2T3o1qsW9w/s1600/WhatsApp%20Image%202026-04-25%20at%2009.55.20.jpeg" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" height="600" data-original-height="1600" data-original-width="836" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjVrzhHubMLha8_J8Mht2x3xKOi5r0r9hcgwf2Qtufnx3GX3ddLRmaKoEhqpMj7jCHsnSTIquFtQST3L0B4798cQYZUSstR_kK0fTWQeXVjVrj5DUYPeKd6cC2mavyJEAL1wfa3gT1LUvxpaIrTgFlSbK73wCM2ezG8fKK3yEtRRDN_s46Tw2T3o1qsW9w/s600/WhatsApp%20Image%202026-04-25%20at%2009.55.20.jpeg"/></a></div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">🗑️ User Menghapus Tugas</div>
+                <div class="justified-text">
+                    <strong>Flow:</strong> User swipe task card ke kanan (atau klik delete button) → onDeleteTask callback dipanggil dengan task → ViewModel.deleteTask() dijalankan → Repository.deleteTask() dipanggil → Task dihapus dari database → ViewModel menyimpan deleted task untuk undo → Snackbar muncul dengan option "Undo" → Jika user klik Undo, task di-restore.
+                </div>
+              <div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkFubdvHSgSD-zTqscKz93S0D8vrE7HPlslM3bwaLv_KAIirvwzPKBiqU6nwhLegDUrwH5vdXejxMuj3RZqcxjbI21yt9Ahv7mfbBpL1BKBvAKSAOX_2XMhnH_M1Tw7eSIkjIPwJRAd27lgjg4JirpUZky1OQOmgbkQEW0nYkVsQyczxnF-mcw1YwQREY/s1080/WhatsApp%20Image%202026-04-25%20at%2009.55.19%20%281%29.jpeg" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="600" data-original-height="640" data-original-width="1080" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkFubdvHSgSD-zTqscKz93S0D8vrE7HPlslM3bwaLv_KAIirvwzPKBiqU6nwhLegDUrwH5vdXejxMuj3RZqcxjbI21yt9Ahv7mfbBpL1BKBvAKSAOX_2XMhnH_M1Tw7eSIkjIPwJRAd27lgjg4JirpUZky1OQOmgbkQEW0nYkVsQyczxnF-mcw1YwQREY/s600/WhatsApp%20Image%202026-04-25%20at%2009.55.19%20%281%29.jpeg"/></a></div><div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnpXjp5C6kunjwASf239_4CYWzii9X3bEGEbOLSaMbDF_eogi6mAEHWLJFqy0FErJjh5UjkZpfRpZZzX5ddUvVIY9CVXPF_DsdrYiOt35BMQG0yMr40pUkgYYAJkk8qd546bG6JiPVsnINBRRiQYlktxGWF9fwZHDRZybrZmdL6l5c2MhDQtdclBGHptY/s1600/WhatsApp%20Image%202026-04-25%20at%2009.55.19.jpeg" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" height="600" data-original-height="1600" data-original-width="849" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjnpXjp5C6kunjwASf239_4CYWzii9X3bEGEbOLSaMbDF_eogi6mAEHWLJFqy0FErJjh5UjkZpfRpZZzX5ddUvVIY9CVXPF_DsdrYiOt35BMQG0yMr40pUkgYYAJkk8qd546bG6JiPVsnINBRRiQYlktxGWF9fwZHDRZybrZmdL6l5c2MhDQtdclBGHptY/s600/WhatsApp%20Image%202026-04-25%20at%2009.55.19.jpeg"/></a></div>
+            </div>
+            
+            <div class="function-box">
+                <div class="function-name">📅 User Beralih ke Kalender</div>
+                <div class="justified-text">
+                    <strong>Flow:</strong> User klik menu "Kalender" di bottom navigation atau swipe layar ke kiri → pagerState.animateScrollToPage(1) dijalankan → HorizontalPager melakukan animasi scroll ke page 1 → CalendarScreen() di-render dengan data dari ViewModel → User dapat melihat kalender bulanan dan tasks untuk tanggal tertentu.
+                </div>
+              <div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiPYkN9ZQeVuFu3ZX0IwturutB91EcCNBx0ozcWpT3gMRcqTWw7KEL_s5_fTj7SCSbSMOOXTNOGqRY-9Rl_44vd7gB0AtISutpZ7JVFTDbs5DDwJSvWDFMNnBSwxbcLTriHUo91GFMbF003p6ffCZTlpUecdc6x7wJp8ngt4gMJItpXnBbnhpOpcJYfKZI/s1600/WhatsApp%20Image%202026-04-25%20at%2009.55.18.jpeg" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" height="600" data-original-height="1600" data-original-width="846" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiPYkN9ZQeVuFu3ZX0IwturutB91EcCNBx0ozcWpT3gMRcqTWw7KEL_s5_fTj7SCSbSMOOXTNOGqRY-9Rl_44vd7gB0AtISutpZ7JVFTDbs5DDwJSvWDFMNnBSwxbcLTriHUo91GFMbF003p6ffCZTlpUecdc6x7wJp8ngt4gMJItpXnBbnhpOpcJYfKZI/s600/WhatsApp%20Image%202026-04-25%20at%2009.55.18.jpeg"/></a></div>
+            </div>
+        </div>
+        
+        <!-- SECTION 8: TEKNOLOGI DAN DEPENDENCIES -->
+        <div class="section">
+            <h2 class="section-title">8. Teknologi dan Dependencies</h2>
+            
+            <div class="justified-text">
+                Aplikasi To-Do Planner menggunakan berbagai library dan framework modern dari Android ecosystem untuk membangun aplikasi yang robust dan efficient:
+            </div>
+            
+            <div class="tech-table-container">
+                <table class="tech-table">
+                    <thead>
+                        <tr>
+                            <th>Teknologi</th>
+                            <th>Versi</th>
+                            <th>Kegunaan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Jetpack Compose</strong></td>
+                            <td>Latest</td>
+                            <td>UI declarative framework untuk membangun UI secara deklaratif dengan Kotlin</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Material 3</strong></td>
+                            <td>Latest</td>
+                            <td>Design system dan pre-built components (Button, TextField, Card, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Room Database</strong></td>
+                            <td>Latest</td>
+                            <td>SQLite abstraction layer untuk penyimpanan data lokal yang aman dan efficient</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ViewModel</strong></td>
+                            <td>Latest</td>
+                            <td>Lifecycle-aware component untuk manajemen state dan UI logic</td>
+                        </tr>
+                        <tr>
+                            <td><strong>StateFlow</strong></td>
+                            <td>Latest</td>
+                            <td>Flow implementation untuk reactive state management</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Coroutines</strong></td>
+                            <td>Latest</td>
+                            <td>Asynchronous programming untuk database operations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HorizontalPager</strong></td>
+                            <td>Latest</td>
+                            <td>Composable untuk horizontal swipe navigation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- SECTION 9: KESIMPULAN -->
+        <div class="section">
+            <h2 class="section-title">9. Kesimpulan</h2>
+            
+            <div class="justified-text">
+                Aplikasi To-Do Planner adalah contoh sempurna dari bagaimana menggunakan teknologi Android modern untuk membangun aplikasi produktivitas yang powerful, user-friendly, dan well-architected. Dengan menggunakan MVVM architecture, Jetpack Compose untuk UI, dan Room Database untuk data persistence, aplikasi ini memberikan foundation yang kuat untuk pengembangan lebih lanjut.
+            </div>
+            
+            <div class="justified-text">
+                Fitur-fitur seperti smart task grouping, calendar integration, recurring tasks, dan modern gesture interactions membuat aplikasi ini valuable untuk user yang ingin meningkatkan produktivitas mereka. Struktur kode yang clean dan well-organized memastikan bahwa aplikasi mudah untuk di-maintain, di-test, dan di-extend dengan fitur-fitur baru.
+            </div>
+            
+            <div class="justified-text">
+                Melalui dokumentasi ini, diharapkan developer dapat memahami dengan jelas bagaimana aplikasi ini bekerja, dari architecture-level hingga implementation-level. Setiap komponen memiliki tanggung jawab yang jelas, mengikuti SOLID principles dan best practices dalam pengembangan aplikasi Android modern.
+            </div>
+        </div>
+    </div>
+</body>
+         

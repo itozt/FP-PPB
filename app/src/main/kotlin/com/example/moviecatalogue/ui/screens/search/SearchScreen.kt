@@ -2,20 +2,28 @@ package com.example.moviecatalogue.ui.screens.search
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.graphics.Color
+import com.example.moviecatalogue.ui.components.glassMorphism
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
@@ -24,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviecatalogue.domain.Genre
@@ -45,7 +54,7 @@ import com.example.moviecatalogue.ui.components.ShimmerBrush
 @Composable
 fun SearchScreen(
     repository: MovieRepository,
-    onMovieClick: (Int) -> Unit
+    onMovieClick: (Int, String) -> Unit
 ) {
     val viewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory(repository))
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -98,15 +107,15 @@ fun SearchScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp) // <--- Top margin agar tidak menabrak status bar
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // ── Genre Filter Chips ───────────────────────────────────────────
-            AnimatedVisibility(visible = uiState.genres.isNotEmpty()) {
+            AnimatedVisibility(visible = uiState.displayGenres.isNotEmpty()) {
                 GenreFilterRow(
-                    genres = uiState.genres,
+                    genres = uiState.displayGenres,
                     selectedGenreId = uiState.selectedGenreId,
                     onGenreSelected = viewModel::onGenreSelected
                 )
@@ -119,12 +128,16 @@ fun SearchScreen(
                 when {
                     uiState.isLoading -> SearchLoadingGrid()
 
-                    uiState.filteredResults.isNotEmpty() -> {
+                    uiState.displayResults.isNotEmpty() -> {
+                        val canShowMoreButton = uiState.canLoadMore || uiState.filteredResults.size > uiState.displayLimit
                         SearchResultsGrid(
-                            movies = uiState.filteredResults,
-                            onMovieClick = {
+                            movies = uiState.displayResults,
+                            isLoadingMore = uiState.isLoadingMore,
+                            canLoadMore = canShowMoreButton,
+                            onLoadMore = viewModel::loadMore,
+                            onMovieClick = { id, mediaType ->
                                 keyboardController?.hide()
-                                onMovieClick(it)
+                                onMovieClick(id, mediaType)
                             }
                         )
                     }
@@ -182,16 +195,17 @@ private fun SearchField(
             }
         },
         singleLine = true,
-        shape = RoundedCornerShape(14.dp),
+        shape = androidx.compose.foundation.shape.CircleShape,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f), // <--- Opacity Search Background
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f) // <--- Opacity Search Background
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onQueryChange(query) }),
-        modifier = modifier
+        textStyle = LocalTextStyle.current.copy(fontSize = 14.sp), // <--- Ukuran teks pencarian
+        modifier = modifier // Menghapus height(50.dp) agar teks kembali rata tengah
     )
 }
 
@@ -202,32 +216,47 @@ private fun GenreFilterRow(
     onGenreSelected: (Int?) -> Unit
 ) {
     LazyRow(
+        modifier = Modifier.padding(bottom = 16.dp), // <--- Margin bawah untuk area hitam
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
-            FilterChip(
-                selected = selectedGenreId == null,
-                onClick = { onGenreSelected(null) },
-                label = { Text("All") },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primary,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .glassMorphism(
+                        shape = androidx.compose.foundation.shape.CircleShape,
+                        backgroundColor = if (selectedGenreId == null) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.05f),
+                        strokeColor = if (selectedGenreId == null) Color.White.copy(alpha = 0.2f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                    )
+                    .clip(androidx.compose.foundation.shape.CircleShape)
+                    .clickable { onGenreSelected(null) }
+                    .padding(horizontal = 16.dp, vertical = 6.dp) // <--- Padding atas bawah (vertical) dan kiri kanan (horizontal)
+            ) {
+                Text(
+                    text = "All",
+                    fontSize = 12.sp,
+                    color = if (selectedGenreId == null) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            )
+            }
         }
         items(items = genres, key = { it.id }) { genre ->
-            FilterChip(
-                selected = selectedGenreId == genre.id,
-                onClick = {
-                    onGenreSelected(if (selectedGenreId == genre.id) null else genre.id)
-                },
-                label = { Text(genre.name) },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primary,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .glassMorphism(
+                        shape = androidx.compose.foundation.shape.CircleShape,
+                        backgroundColor = if (selectedGenreId == genre.id) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.05f),
+                        strokeColor = if (selectedGenreId == genre.id) Color.White.copy(alpha = 0.2f) else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                    )
+                    .clip(androidx.compose.foundation.shape.CircleShape)
+                    .clickable { onGenreSelected(if (selectedGenreId == genre.id) null else genre.id) }
+                    .padding(horizontal = 16.dp, vertical = 6.dp) // <--- Padding atas bawah (vertical) dan kiri kanan (horizontal)
+            ) {
+                Text(
+                    text = genre.name,
+                    fontSize = 12.sp,
+                    color = if (selectedGenreId == genre.id) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            )
+            }
         }
     }
 }
@@ -235,20 +264,42 @@ private fun GenreFilterRow(
 @Composable
 private fun SearchResultsGrid(
     movies: List<Movie>,
-    onMovieClick: (Int) -> Unit
+    isLoadingMore: Boolean,
+    canLoadMore: Boolean,
+    onLoadMore: () -> Unit,
+    onMovieClick: (Int, String) -> Unit
 ) {
+    val listState = rememberLazyGridState()
+
     LazyVerticalGrid(
+        state = listState,
         columns = GridCells.Fixed(3),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(start = 12.dp, top = 8.dp, end = 12.dp, bottom = 130.dp), // <--- Bottom margin diperbesar agar tidak menabrak nav bottom saat tombol "Tampilkan lebih banyak" hilang
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.fillMaxSize()
     ) {
-        items(items = movies, key = { it.id }) { movie ->
+        items(items = movies, key = { "${it.id}_${it.mediaType.value}" }) { movie ->
             MovieCard(
                 movie = movie,
-                onClick = { onMovieClick(movie.id) },
+                onClick = { onMovieClick(movie.id, movie.mediaType.value) },
                 modifier = Modifier.fillMaxWidth()
             )
+        }
+        if (isLoadingMore) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                }
+            }
+        } else if (canLoadMore && movies.isNotEmpty()) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+                    TextButton(onClick = onLoadMore) {
+                        Text("Tampilkan lebih banyak...", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
         }
     }
 }
@@ -303,7 +354,12 @@ private fun EmptySearchState(query: String, hasGenreFilter: Boolean) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "😔", style = MaterialTheme.typography.displayMedium)
+        androidx.compose.material3.Icon(
+            imageVector = Icons.Rounded.SentimentDissatisfied,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = if (hasGenreFilter) "No results in this genre for\n\"$query\""
@@ -330,7 +386,12 @@ private fun SearchHintState() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "🎬", style = MaterialTheme.typography.displayMedium)
+        androidx.compose.material3.Icon(
+            imageVector = Icons.Rounded.Movie,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Find your next favourite film",

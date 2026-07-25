@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.moviecatalogue.di.ServiceLocator
+import com.example.moviecatalogue.ui.components.LiquidBackground
 import com.example.moviecatalogue.ui.navigation.AppNavigation
 import com.example.moviecatalogue.ui.theme.FinalProjectTheme
 
@@ -29,7 +30,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             FinalProjectTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
+                Surface(modifier = Modifier.fillMaxSize(), color = androidx.compose.ui.graphics.Color.Transparent) {
+                    LiquidBackground()
                     AppNavigation(
                         repository = repository,
                         authRepository = authRepository

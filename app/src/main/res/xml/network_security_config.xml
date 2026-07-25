@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">api.themoviedb.org</domain>
         <domain includeSubdomains="true">image.tmdb.org</domain>
+        <domain includeSubdomains="true">vidking.net</domain>
     </domain-config>
 </network-security-config>
