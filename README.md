@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://github.com/itozt/FP-PPB/releases/latest"><img src="https://img.shields.io/github/v/tag/itozt/FP-PPB?color=brightgreen&label=version&style=for-the-badge" alt="Latest Version"></a>
   &nbsp;
-  <a href="https://github.com/itozt/FP-PPB/releases/latest/download/movflix_v1.0.0.apk"><img src="https://img.shields.io/badge/download_apk-blue?style=for-the-badge&logo=android" alt="Download APK"></a>
+  <a href="https://github.com/itozt/FP-PPB/releases/latest/download/movflix_v1.1.0.apk"><img src="https://img.shields.io/badge/download_apk-blue?style=for-the-badge&logo=android" alt="Download APK"></a>
 </p>
 
 > Aplikasi katalog film modern untuk menjelajah, mencari, dan menonton trailer film terbaru, dibangun sepenuhnya menggunakan teknologi Jetpack Compose dengan data real-time dari TMDB.
@@ -30,7 +30,8 @@
 
 |                                                                      Home                                                                       |                                                                  Search                                                                   |                                                                  Detail                                                                   |                                                                    Profile                                                                    |
 | :---------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img width="738" height="1600" alt="dashboard - login" src="https://github.com/user-attachments/assets/c00b27be-49e5-4b90-9c4e-af9a4588c4fa" /> | <img width="738" height="1600" alt="search page" src="https://github.com/user-attachments/assets/bcd1f62e-4f70-41ea-9911-70a0a837e1dc" /> | <img width="683" height="1600" alt="detail film" src="https://github.com/user-attachments/assets/98f04475-df2e-4902-87d1-c38f92b1e6d2" /> | <img width="738" height="1600" alt="profile - login" src="https://github.com/user-attachments/assets/8c788ce7-2146-4d33-9f49-4414e983ce0a" /> |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/585f6d27-eb5c-4ed7-b3b6-8327a231f6cd" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/b5bafa1e-5f95-4f0c-a0df-43d52a4f38bd" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/3f1bab4e-8c38-4c78-af54-5ba2d9e8466f" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/88778abf-1109-48d7-bcf8-bd9f5f498af7" />
+ |
 
 ## 📥 Download APK
 
