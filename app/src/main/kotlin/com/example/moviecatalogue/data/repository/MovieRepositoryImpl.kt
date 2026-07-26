@@ -183,7 +183,6 @@ class MovieRepositoryImpl(
     }
 
     override fun getContinueWatching(): Flow<List<WatchProgress>> {
-        if (isGuest) return flowOf(emptyList())
         return watchProgressDao.getContinueWatching(currentUserId).map { entities ->
             entities.map { it.toDomain() }
         }

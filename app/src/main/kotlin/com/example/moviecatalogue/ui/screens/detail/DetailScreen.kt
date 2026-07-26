@@ -1,5 +1,7 @@
 package com.example.moviecatalogue.ui.screens.detail
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,8 +33,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -75,6 +79,8 @@ fun DetailScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var showLoginDialog by remember { mutableStateOf(false) }
+
+
 
     // Guests can't save a watchlist — prompt them to log in instead of toggling.
     val onWatchlistToggle: () -> Unit = {
@@ -148,6 +154,7 @@ fun DetailScreen(
                     // TV
                     episodes           = uiState.episodes,
                     selectedSeason     = uiState.selectedSeason,
+                    selectedEpisode    = uiState.selectedEpisode,
                     isLoadingEpisodes  = uiState.isLoadingEpisodes,
                     onSeasonSelected   = viewModel::selectSeason,
                     onEpisodePlay      = viewModel::playEpisode,
@@ -178,6 +185,11 @@ fun DetailScreen(
                     season = if (uiState.mediaType == MediaType.TV) uiState.selectedSeason else null,
                     episode = if (uiState.mediaType == MediaType.TV) uiState.selectedEpisode else null,
                     startProgress = uiState.resumeTimestamp,
+                    duration = if (uiState.mediaType == MediaType.TV) {
+                        uiState.episodes.find { it.episodeNumber == uiState.selectedEpisode }?.runtime?.let { it * 60.0 } ?: 2700.0
+                    } else {
+                        uiState.movieDetail?.runtime?.let { it * 60.0 } ?: 7200.0
+                    },
                     onClose = viewModel::closeStream,
                     onProgressUpdate = viewModel::onStreamProgress
                 )
@@ -230,6 +242,7 @@ private fun DetailContent(
     // TV
     episodes: List<TvEpisode>,
     selectedSeason: Int,
+    selectedEpisode: Int,
     isLoadingEpisodes: Boolean,
     onSeasonSelected: (Int) -> Unit,
     onEpisodePlay: (Int, Int) -> Unit,
@@ -278,7 +291,6 @@ private fun DetailContent(
                         )
                     )
             )
-
 
             // Center play button → opens the streaming player in full-screen landscape.
             FilledIconButton(

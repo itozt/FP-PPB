@@ -94,8 +94,7 @@ class DetailViewModel(
                 .collect { progress ->
                     _uiState.update {
                         it.copy(
-                            watchProgress = progress,
-                            resumeTimestamp = progress?.currentTime?.toInt()
+                            watchProgress = progress
                         )
                     }
                 }
@@ -133,16 +132,31 @@ class DetailViewModel(
     // ─── Streaming ────────────────────────────────────────────────────────────
 
     fun playStream() {
-        _uiState.update { it.copy(isStreamingPlaying = true) }
+        viewModelScope.launch {
+            val state = _uiState.value
+            val s = if (mediaType == MediaType.TV) state.selectedSeason else null
+            val e = if (mediaType == MediaType.TV) state.selectedEpisode else null
+            val specificProgress = repository.getWatchProgress(movieId, mediaType, s, e)
+            _uiState.update {
+                it.copy(
+                    resumeTimestamp = specificProgress?.currentTime?.toInt(),
+                    isStreamingPlaying = true
+                )
+            }
+        }
     }
 
     fun playEpisode(season: Int, episode: Int) {
-        _uiState.update {
-            it.copy(
-                selectedSeason = season,
-                selectedEpisode = episode,
-                isStreamingPlaying = true
-            )
+        viewModelScope.launch {
+            val specificProgress = repository.getWatchProgress(movieId, mediaType, season, episode)
+            _uiState.update {
+                it.copy(
+                    selectedSeason = season,
+                    selectedEpisode = episode,
+                    resumeTimestamp = specificProgress?.currentTime?.toInt(),
+                    isStreamingPlaying = true
+                )
+            }
         }
     }
 
@@ -166,6 +180,7 @@ class DetailViewModel(
                     progress = progress,
                     title = movie.displayTitle,
                     posterUrl = movie.posterUrl,
+                    backdropUrl = movie.backdropUrl.ifEmpty { movie.posterUrl },
                     season = if (mediaType == MediaType.TV) state.selectedSeason else null,
                     episode = if (mediaType == MediaType.TV) state.selectedEpisode else null
                 )

@@ -66,7 +66,14 @@ Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsi
 
 ## 📋 Changelog / Catatan Rilis
 
-### v1.1.0 (Latest)
+### v1.1.1 (Latest)
+
+- Penambahan fitur Lanjutkan Tontonan di halaman utama.
+- Pelacakan riwayat tontonan kini tersimpan per-episode untuk TV Series.
+- Perbaikan _bug_ dan peningkatan stabilitas pada pemutar video _streaming_.
+- Memperbaiki masalah _crash_ aplikasi serta pembaruan dukungan untuk mode Guest.
+
+### v1.1.0
 
 - Pembaruan antarmuka (UI) dan tata letak untuk pengalaman pengguna yang lebih rapi dan nyaman.
 - Pencarian kini lebih pintar: otomatis menghapus filter saat kolom pencarian dikosongkan.

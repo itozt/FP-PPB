@@ -40,7 +40,8 @@ interface WatchProgressDao {
 
     @Query("""
         SELECT * FROM watch_progress 
-        WHERE userId = :userId AND progress > 0.0 AND progress < 1.0
+        WHERE userId = :userId AND progress > 0.0 AND progress < 95.0
+        GROUP BY contentId, mediaType
         ORDER BY lastWatched DESC
         LIMIT 10
     """)

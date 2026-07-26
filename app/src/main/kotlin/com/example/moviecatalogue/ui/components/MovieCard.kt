@@ -4,6 +4,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -342,90 +343,101 @@ fun ContinueWatchingCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier  = modifier
-            .fillMaxWidth()
-            .glassMorphism(cornerRadius = 24.dp)
+        modifier = modifier
+            .width(240.dp)
+            .height(135.dp)
             .clickable(onClick = onClick),
-        shape     = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors    = CardDefaults.cardColors(containerColor = Color.Transparent)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
-        Column {
-            Box {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(progress.posterUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = progress.title,
-                    contentScale       = ContentScale.Crop,
-                    modifier           = Modifier
-                        .fillMaxWidth()
-                        .height(112.dp) // 16:9 aspect ratio approx
-                )
-                
-                // Play overlay
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.3f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.PlayArrow,
-                        contentDescription = "Play",
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-                
-                // Media Type / Episode Info
-                val infoText = if (progress.mediaType == MediaType.TV) {
-                    "S${progress.season ?: 1} E${progress.episode ?: 1}"
-                } else "Movie"
-                
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(6.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(4.dp)
-                        )
-                        .padding(horizontal = 4.dp, vertical = 2.dp)
-                ) {
-                    Text(
-                        text = infoText,
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
-
-            LinearProgressIndicator(
-                progress = { progress.progress.toFloat() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(3.dp),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant
+        Box(modifier = Modifier.fillMaxSize()) {
+            val imageUrl = progress.backdropUrl.ifBlank { progress.posterUrl }
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = progress.title,
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
             )
 
-            Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+            // Gradient Overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 0.1f),
+                                Color.Black.copy(alpha = 0.4f),
+                                Color.Black.copy(alpha = 0.95f)
+                            )
+                        )
+                    )
+            )
+
+            // Play Icon overlay (Center)
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(48.dp)
+                    .background(Color.Black.copy(alpha = 0.5f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = "Play",
+                    tint = Color.White,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+
+            // Info (Bottom Left)
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
+            ) {
                 Text(
                     text = progress.title,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                
+                val infoText = if (progress.mediaType == MediaType.TV) {
+                    "S${progress.season ?: 1} E${progress.episode ?: 1}"
+                } else "Movie"
+
                 val remainingMins = ((progress.duration - progress.currentTime) / 60).toInt()
+                val timeText = if (remainingMins > 0) "$remainingMins min left" else "Almost done"
+
                 Text(
-                    text = if (remainingMins > 0) "$remainingMins min left" else "Almost done",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "$infoText • $timeText",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color.White.copy(alpha = 0.75f)
                 )
             }
+
+            // Progress Indicator (Bottom)
+            LinearProgressIndicator(
+                progress = { 
+                    if (progress.duration > 0.0) {
+                        (progress.currentTime / progress.duration).toFloat().coerceIn(0f, 1f)
+                    } else {
+                        0f
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(4.dp),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = Color.White.copy(alpha = 0.2f)
+            )
         }
     }
 }
