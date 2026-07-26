@@ -66,7 +66,7 @@ Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsi
 
 ## 📋 Changelog / Catatan Rilis
 
-### v1.2.0 (Latest)
+### v1.1.1 (Latest)
 
 - **Lanjutkan Tontonan (Watch Progress):** Otomatis menyimpan detik waktu tontonan terakhir dan menampilkannya di halaman Beranda dengan kartu bernuansa _backdrop banner_ landscape.
 - **Dukungan TV Series Per-Episode:** Pelacakan waktu tontonan kini tersimpan secara independen untuk setiap episode TV Series (tidak menimpa episode lain).
