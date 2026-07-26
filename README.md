@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://github.com/itozt/FP-PPB/releases/latest"><img src="https://img.shields.io/github/v/tag/itozt/FP-PPB?color=brightgreen&label=version&style=for-the-badge" alt="Latest Version"></a>
   &nbsp;
-  <a href="https://github.com/itozt/FP-PPB/releases/latest/download/movflix_v1.1.0.apk"><img src="https://img.shields.io/badge/download_apk-blue?style=for-the-badge&logo=android" alt="Download APK"></a>
+  <a href="https://github.com/itozt/FP-PPB/releases/latest/download/movflix_v1.1.1.apk"><img src="https://img.shields.io/badge/download_apk-blue?style=for-the-badge&logo=android" alt="Download APK"></a>
 </p>
 
 > Aplikasi katalog film modern untuk menjelajah, mencari, dan menonton trailer film terbaru, dibangun sepenuhnya menggunakan teknologi Jetpack Compose dengan data real-time dari TMDB.
