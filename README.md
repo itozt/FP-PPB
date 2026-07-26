@@ -66,7 +66,14 @@ Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsi
 
 ## 📋 Changelog / Catatan Rilis
 
-### v1.1.0 (Latest)
+### v1.2.0 (Latest)
+
+- **Lanjutkan Tontonan (Watch Progress):** Otomatis menyimpan detik waktu tontonan terakhir dan menampilkannya di halaman Beranda dengan kartu bernuansa _backdrop banner_ landscape.
+- **Dukungan TV Series Per-Episode:** Pelacakan waktu tontonan kini tersimpan secara independen untuk setiap episode TV Series (tidak menimpa episode lain).
+- **Pembaruan Player Streaming (Desktop Mode & High-DPI Scaling):** Pemutaran film kini menggunakan penyamaran _Chrome Desktop User-Agent_ dengan skala kanvas _High-DPI_ untuk antarmuka pemutar video yang bebas _bug_, tajam, dan responsif.
+- **Perbaikan Bug & Stabilitas:** Memperbaiki _crash_ akibat _duplicate key_ pada baris Lanjutkan Tontonan di Beranda, memulihkan dukungan simpan tontonan untuk Mode Guest, serta menghilangkan masalah _looping seek_ saat melanjutkan tontonan.
+
+### v1.1.0
 
 - Pembaruan antarmuka (UI) dan tata letak untuk pengalaman pengguna yang lebih rapi dan nyaman.
 - Pencarian kini lebih pintar: otomatis menghapus filter saat kolom pencarian dikosongkan.
