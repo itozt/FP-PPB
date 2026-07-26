@@ -68,10 +68,10 @@ Dibangun mengikuti pola arsitektur **MVVM (Model-View-ViewModel)** dengan prinsi
 
 ### v1.1.1 (Latest)
 
-- Fitur simpan detik tontonan terakhir (Lanjutkan Tontonan) di halaman utama dengan kartu banner landscape.
-- Pelacakan progres tontonan kini tersimpan secara terpisah per-episode untuk TV Series.
-- Menggunakan mode Desktop pada _player_ streaming untuk tampilan yang lebih stabil dan responsif.
-- Memperbaiki masalah _crash_ saat memuat daftar tontonan serta dukungan simpan tontonan pada mode Guest.
+- Penambahan fitur Lanjutkan Tontonan di halaman utama.
+- Pelacakan riwayat tontonan kini tersimpan per-episode untuk TV Series.
+- Perbaikan _bug_ dan peningkatan stabilitas pada pemutar video _streaming_.
+- Memperbaiki masalah _crash_ aplikasi serta pembaruan dukungan untuk mode Guest.
 
 ### v1.1.0
 
