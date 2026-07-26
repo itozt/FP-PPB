@@ -26,6 +26,7 @@ data class WatchProgressEntity(
     val progress: Double,
     val title: String,
     val posterUrl: String,
+    val backdropUrl: String = "",
     val season: Int = 0,
     val episode: Int = 0,
     val lastWatched: Long = System.currentTimeMillis()
@@ -38,6 +39,7 @@ data class WatchProgressEntity(
         progress = progress,
         title = title,
         posterUrl = posterUrl,
+        backdropUrl = backdropUrl,
         season = if (season > 0) season else null,
         episode = if (episode > 0) episode else null,
         lastWatched = lastWatched
@@ -53,6 +55,7 @@ fun WatchProgress.toEntity(userId: Int): WatchProgressEntity = WatchProgressEnti
     progress = progress,
     title = title,
     posterUrl = posterUrl,
+    backdropUrl = backdropUrl,
     season = season ?: 0,
     episode = episode ?: 0,
     lastWatched = lastWatched

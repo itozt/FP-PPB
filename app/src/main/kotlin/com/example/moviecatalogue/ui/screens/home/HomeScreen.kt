@@ -297,7 +297,7 @@ fun ContinueWatchingRow(
             contentPadding        = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(items = progressList, key = { "${it.contentId}_${it.mediaType.value}" }) { progress ->
+            items(items = progressList, key = { "${it.contentId}_${it.mediaType.value}_${it.season ?: 0}_${it.episode ?: 0}" }) { progress ->
                 ContinueWatchingCard(
                     progress = progress,
                     onClick = { onMovieClick(progress.contentId, progress.mediaType.value) }

@@ -159,6 +159,7 @@ data class WatchProgress(
     val progress: Double,
     val title: String,
     val posterUrl: String,
+    val backdropUrl: String = "",
     val season: Int? = null,
     val episode: Int? = null,
     val lastWatched: Long = System.currentTimeMillis()
